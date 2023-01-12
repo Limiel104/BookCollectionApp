@@ -11,4 +11,8 @@ import com.example.bookcollectionapp.book_feature.domain.model.Book
 abstract class CollectionDatabase: RoomDatabase() {
 
     abstract val bookDao: BookDao
+
+    companion object {
+        const val DATABASE_NAME = "collection_db"
+    }
 }

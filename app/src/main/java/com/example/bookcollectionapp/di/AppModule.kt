@@ -5,10 +5,7 @@ import androidx.room.Room
 import com.example.bookcollectionapp.book_feature.data.data_source.CollectionDatabase
 import com.example.bookcollectionapp.book_feature.data.repository.BookRepositoryImpl
 import com.example.bookcollectionapp.book_feature.domain.repository.BookRepository
-import com.example.bookcollectionapp.book_feature.domain.use_case.AddBookUseCase
-import com.example.bookcollectionapp.book_feature.domain.use_case.BookUseCases
-import com.example.bookcollectionapp.book_feature.domain.use_case.DeleteBookUseCase
-import com.example.bookcollectionapp.book_feature.domain.use_case.GetBooksUseCase
+import com.example.bookcollectionapp.book_feature.domain.use_case.*
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -41,7 +38,8 @@ object AppModule {
         return BookUseCases(
             getBooksUseCase = GetBooksUseCase(repository),
             deleteBookUseCase = DeleteBookUseCase(repository),
-            addBookUseCase = AddBookUseCase(repository)
+            addBookUseCase = AddBookUseCase(repository),
+            getBookUseCase = GetBookUseCase(repository)
         )
     }
 }

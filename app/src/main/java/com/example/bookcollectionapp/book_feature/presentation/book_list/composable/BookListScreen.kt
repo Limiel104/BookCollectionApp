@@ -14,6 +14,7 @@ import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import com.example.bookcollectionapp.book_feature.presentation.book_list.BookListViewModel
+import com.example.bookcollectionapp.book_feature.presentation.util.Screen
 
 @Composable
 fun BookListScreen(
@@ -27,7 +28,9 @@ fun BookListScreen(
     Scaffold(
         floatingActionButton = {
             FloatingActionButton(
-                onClick = { /*TODO*/ }
+                onClick = {
+                    navController.navigate(Screen.AddEditBookScreen.route)
+                }
             ) {
                 Icon(
                     imageVector = Icons.Default.Add,
@@ -62,7 +65,9 @@ fun BookListScreen(
                         book = book,
                         modifier = Modifier
                             .fillMaxWidth()
-                            .clickable { }
+                            .clickable {
+                                navController.navigate(Screen.AddEditBookScreen.route + "?bookId=${book.id}")
+                            }
                     )
                     Spacer(modifier = Modifier.height(10.dp))
                 }

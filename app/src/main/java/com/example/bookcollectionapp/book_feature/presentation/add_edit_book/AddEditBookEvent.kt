@@ -11,7 +11,9 @@ sealed class AddEditBookEvent {
     data class ChangeAuthorFocus(val focusState: FocusState): AddEditBookEvent()
 
     data class EnteredPublisher(val value: String): AddEditBookEvent()
-    data class ChangePublisherFocus(val focusState: FocusState): AddEditBookEvent()
+//    data class ChangePublisherFocus(val focusState: FocusState): AddEditBookEvent()
+
+    data class PickedImage(val value: String): AddEditBookEvent()
 
     object SaveBook: AddEditBookEvent()
 }

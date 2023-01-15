@@ -31,10 +31,11 @@ class AddEditBookViewModel @Inject constructor(
     ))
     val bookAuthor: State<BookTextFieldState> = _bookAuthor
 
-    private val _bookPublisher = mutableStateOf(BookTextFieldState(
-        hint = "Publisher"
-    ))
+    private val _bookPublisher = mutableStateOf(BookTextFieldState())
     val bookPublisher: State<BookTextFieldState> = _bookPublisher
+
+    private val _bookImagePath = mutableStateOf(BookImagePathState())
+    val bookImagePath: State<BookImagePathState> = _bookImagePath
 
     private val _eventFlow = MutableSharedFlow<UiEvent>()
     val eventFlow = _eventFlow.asSharedFlow()
@@ -55,7 +56,10 @@ class AddEditBookViewModel @Inject constructor(
                         )
                         _bookPublisher.value = bookPublisher.value.copy(
                             text = book.publisher,
-                            isHintVisible = false
+//                            isHintVisible = false
+                        )
+                        _bookImagePath.value = bookImagePath.value.copy(
+                            imagePath = book.imagePath
                         )
                     }
                 }
@@ -91,9 +95,9 @@ class AddEditBookViewModel @Inject constructor(
                     text = event.value
                 )
             }
-            is AddEditBookEvent.ChangePublisherFocus -> {
-                _bookPublisher.value = bookPublisher.value.copy(
-                    isHintVisible = !event.focusState.isFocused && bookPublisher.value.text.isBlank()
+            is AddEditBookEvent.PickedImage -> {
+                _bookImagePath.value = bookImagePath.value.copy(
+                    imagePath = event.value
                 )
             }
             is AddEditBookEvent.SaveBook -> {
@@ -104,7 +108,8 @@ class AddEditBookViewModel @Inject constructor(
                                 id = bookToEditId,
                                 title = bookTitle.value.text,
                                 author = bookAuthor.value.text,
-                                publisher = bookPublisher.value.text
+                                publisher = bookPublisher.value.text,
+                                imagePath = bookImagePath.value.imagePath
                             )
                         )
                         _eventFlow.emit(UiEvent.SaveBook)

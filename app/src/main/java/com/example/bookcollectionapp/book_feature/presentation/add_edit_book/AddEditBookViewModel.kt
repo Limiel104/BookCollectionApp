@@ -59,7 +59,8 @@ class AddEditBookViewModel @Inject constructor(
 //                            isHintVisible = false
                         )
                         _bookImagePath.value = bookImagePath.value.copy(
-                            imagePath = book.imagePath
+                            imagePath = book.imagePath,
+                            imageFileName = book.imageFileName
                         )
                     }
                 }
@@ -97,7 +98,13 @@ class AddEditBookViewModel @Inject constructor(
             }
             is AddEditBookEvent.PickedImage -> {
                 _bookImagePath.value = bookImagePath.value.copy(
-                    imagePath = event.value
+                    imagePath = event.value,
+                    isCoverChanged = true
+                )
+            }
+            is AddEditBookEvent.PickedNewFileName -> {
+                _bookImagePath.value = bookImagePath.value.copy(
+                    imageFileName = event.value
                 )
             }
             is AddEditBookEvent.SaveBook -> {
@@ -109,7 +116,8 @@ class AddEditBookViewModel @Inject constructor(
                                 title = bookTitle.value.text,
                                 author = bookAuthor.value.text,
                                 publisher = bookPublisher.value.text,
-                                imagePath = bookImagePath.value.imagePath
+                                imagePath = bookImagePath.value.imagePath,
+                                imageFileName = bookImagePath.value.imageFileName
                             )
                         )
                         _eventFlow.emit(UiEvent.SaveBook)

@@ -1,6 +1,11 @@
 package com.example.bookcollectionapp.book_feature.presentation.add_edit_book.composable
 
+import android.graphics.Bitmap
+import android.graphics.ImageDecoder
 import android.net.Uri
+import android.os.Build
+import android.provider.MediaStore
+import android.util.Log
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.clickable
@@ -23,7 +28,10 @@ import com.example.bookcollectionapp.R
 import com.example.bookcollectionapp.book_feature.presentation.add_edit_book.AddEditBookEvent
 import com.example.bookcollectionapp.book_feature.presentation.add_edit_book.AddEditBookViewModel
 import com.example.bookcollectionapp.book_feature.presentation.add_edit_book.UiEvent
+import com.example.bookcollectionapp.common.write
 import kotlinx.coroutines.flow.collectLatest
+import java.io.File
+import java.util.UUID
 
 @Composable
 fun AddEditBookScreen(
@@ -38,9 +46,31 @@ fun AddEditBookScreen(
 
     var selectedImage by remember { mutableStateOf<Uri?>(null) }
 
-    val launcher = rememberLauncherForActivityResult(contract = ActivityResultContracts.GetContent()) { uri ->
-        selectedImage = uri
-        viewModel.onEvent(AddEditBookEvent.PickedImage(uri.toString()))
+    val context = LocalContext.current
+    val dirPath = context.filesDir.path
+    var fileName = imagePathState.imageFileName
+
+    if(fileName == ""){
+        fileName = "/" + UUID.randomUUID().toString() + ".jpeg"
+        viewModel.onEvent(AddEditBookEvent.PickedNewFileName(fileName))
+    }
+
+    val filePath = dirPath +  fileName
+
+    val launcher = rememberLauncherForActivityResult(ActivityResultContracts.GetContent()) { uri ->
+        if(Build.VERSION.SDK_INT<29) {
+            val result = MediaStore.Images.Media.getBitmap(context.contentResolver,uri)
+            selectedImage = uri
+            File(dirPath, fileName).write(result, Bitmap.CompressFormat.JPEG, 40)
+            viewModel.onEvent(AddEditBookEvent.PickedImage(filePath))
+        }
+        else {
+            val source = ImageDecoder.createSource(context.contentResolver, uri!!)
+            val result = ImageDecoder.decodeBitmap(source)
+            selectedImage = uri
+            File(dirPath, fileName).write(result, Bitmap.CompressFormat.JPEG, 40)
+            viewModel.onEvent(AddEditBookEvent.PickedImage(filePath))
+        }
     }
 
     val scaffoldState = rememberScaffoldState()
@@ -80,13 +110,15 @@ fun AddEditBookScreen(
             verticalArrangement = Arrangement.Center
         ) {
             if (imagePathState.imagePath == "") {
+                Log.i("TAG12","if   " + imagePathState.imagePath)
                 AsyncImage(
                     model = ImageRequest.Builder(LocalContext.current)
-                        .data(selectedImage)
+                        .data(imagePathState.imagePath)
                         .build(),
                     contentDescription = "Selected image",
                     contentScale = ContentScale.Crop,
                     fallback = painterResource(R.drawable.ic_camera),
+                    error = painterResource(R.drawable.ic_camera),
                     modifier = Modifier
                         .size(170.dp, 250.dp)
                         .clickable {
@@ -94,19 +126,39 @@ fun AddEditBookScreen(
                         }
                 )
             }
-            else {
-                AsyncImage(
-                    model = ImageRequest.Builder(LocalContext.current)
-                        .data(imagePathState.imagePath)
-                        .build(),
-                    contentDescription = "Selected image",
-                    contentScale = ContentScale.Crop,
-                    modifier = Modifier
-                        .size(170.dp, 250.dp)
-                        .clickable {
-                            launcher.launch("image/*")
-                        }
-                )
+            else{
+                if (imagePathState.isCoverChanged){
+                    Log.i("TAG12","else if   " + imagePathState.imagePath)
+                    AsyncImage(
+                        model = ImageRequest.Builder(LocalContext.current)
+                            .data(selectedImage)
+                            .build(),
+                        contentDescription = "Selected image",
+                        contentScale = ContentScale.Crop,
+                        fallback = painterResource(R.drawable.ic_camera),
+                        error = painterResource(R.drawable.ic_camera),
+                        modifier = Modifier
+                            .size(170.dp, 250.dp)
+                            .clickable {
+                                launcher.launch("image/*")
+                            }
+                    )
+                }
+                else {
+                    Log.i("TAG12","else   " + imagePathState.imagePath)
+                    AsyncImage(
+                        model = ImageRequest.Builder(LocalContext.current)
+                            .data(imagePathState.imagePath)
+                            .build(),
+                        contentDescription = "Selected image",
+                        contentScale = ContentScale.Crop,
+                        modifier = Modifier
+                            .size(170.dp, 250.dp)
+                            .clickable {
+                                launcher.launch("image/*")
+                            }
+                    )
+                }
             }
 
             Row(
@@ -128,7 +180,6 @@ fun AddEditBookScreen(
                     Text(text = "Take a picture")
                 }
             }
-
 
             OutlinedTextField(
                 value = titleState.text,

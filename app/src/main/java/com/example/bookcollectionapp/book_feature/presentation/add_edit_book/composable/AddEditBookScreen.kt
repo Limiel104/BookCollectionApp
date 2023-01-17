@@ -109,26 +109,8 @@ fun AddEditBookScreen(
             horizontalAlignment = Alignment.CenterHorizontally,
             verticalArrangement = Arrangement.Center
         ) {
-            if (imagePathState.imagePath == "") {
-                Log.i("TAG12","if   " + imagePathState.imagePath)
-                AsyncImage(
-                    model = ImageRequest.Builder(LocalContext.current)
-                        .data(imagePathState.imagePath)
-                        .build(),
-                    contentDescription = "Selected image",
-                    contentScale = ContentScale.Crop,
-                    fallback = painterResource(R.drawable.ic_camera),
-                    error = painterResource(R.drawable.ic_camera),
-                    modifier = Modifier
-                        .size(170.dp, 250.dp)
-                        .clickable {
-                            launcher.launch("image/*")
-                        }
-                )
-            }
-            else{
                 if (imagePathState.isCoverChanged){
-                    Log.i("TAG12","else if   " + imagePathState.imagePath)
+                    Log.i("TAG12","if   " + imagePathState.imagePath)
                     AsyncImage(
                         model = ImageRequest.Builder(LocalContext.current)
                             .data(selectedImage)
@@ -152,6 +134,8 @@ fun AddEditBookScreen(
                             .build(),
                         contentDescription = "Selected image",
                         contentScale = ContentScale.Crop,
+                        fallback = painterResource(R.drawable.ic_camera),
+                        error = painterResource(R.drawable.ic_camera),
                         modifier = Modifier
                             .size(170.dp, 250.dp)
                             .clickable {
@@ -159,7 +143,6 @@ fun AddEditBookScreen(
                             }
                     )
                 }
-            }
 
             Row(
                 modifier = Modifier

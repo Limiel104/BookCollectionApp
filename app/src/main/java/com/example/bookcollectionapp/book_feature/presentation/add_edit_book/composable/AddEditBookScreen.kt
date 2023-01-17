@@ -2,12 +2,12 @@ package com.example.bookcollectionapp.book_feature.presentation.add_edit_book.co
 
 import android.graphics.Bitmap
 import android.graphics.ImageDecoder
-import android.net.Uri
 import android.os.Build
 import android.provider.MediaStore
 import android.util.Log
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
+import androidx.activity.result.launch
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.material.*
@@ -44,8 +44,6 @@ fun AddEditBookScreen(
     val publisherState = viewModel.bookPublisher.value
     val imagePathState = viewModel.bookImagePath.value
 
-    var selectedImage by remember { mutableStateOf<Uri?>(null) }
-
     val context = LocalContext.current
     val dirPath = context.filesDir.path
     var fileName = imagePathState.imageFileName
@@ -57,20 +55,23 @@ fun AddEditBookScreen(
 
     val filePath = dirPath +  fileName
 
-    val launcher = rememberLauncherForActivityResult(ActivityResultContracts.GetContent()) { uri ->
+    val galleryLauncher = rememberLauncherForActivityResult(ActivityResultContracts.GetContent()) { uri ->
         if(Build.VERSION.SDK_INT<29) {
-            val result = MediaStore.Images.Media.getBitmap(context.contentResolver,uri)
-            selectedImage = uri
-            File(dirPath, fileName).write(result, Bitmap.CompressFormat.JPEG, 40)
+            val bitmap = MediaStore.Images.Media.getBitmap(context.contentResolver,uri)
+            File(dirPath, fileName).write(bitmap, Bitmap.CompressFormat.JPEG, 40)
             viewModel.onEvent(AddEditBookEvent.PickedImage(filePath))
         }
         else {
             val source = ImageDecoder.createSource(context.contentResolver, uri!!)
-            val result = ImageDecoder.decodeBitmap(source)
-            selectedImage = uri
-            File(dirPath, fileName).write(result, Bitmap.CompressFormat.JPEG, 40)
+            val bitmap = ImageDecoder.decodeBitmap(source)
+            File(dirPath, fileName).write(bitmap, Bitmap.CompressFormat.JPEG, 40)
             viewModel.onEvent(AddEditBookEvent.PickedImage(filePath))
         }
+    }
+
+    val cameraLauncher = rememberLauncherForActivityResult(ActivityResultContracts.TakePicturePreview()) { bitmap ->
+        File(dirPath, fileName).write(bitmap!!, Bitmap.CompressFormat.JPEG, 40)
+        viewModel.onEvent(AddEditBookEvent.PickedImage(filePath))
     }
 
     val scaffoldState = rememberScaffoldState()
@@ -113,7 +114,7 @@ fun AddEditBookScreen(
                     Log.i("TAG12","if   " + imagePathState.imagePath)
                     AsyncImage(
                         model = ImageRequest.Builder(LocalContext.current)
-                            .data(selectedImage)
+                            .data(filePath)
                             .build(),
                         contentDescription = "Selected image",
                         contentScale = ContentScale.Crop,
@@ -122,7 +123,7 @@ fun AddEditBookScreen(
                         modifier = Modifier
                             .size(170.dp, 250.dp)
                             .clickable {
-                                launcher.launch("image/*")
+                                galleryLauncher.launch("image/*")
                             }
                     )
                 }
@@ -139,7 +140,7 @@ fun AddEditBookScreen(
                         modifier = Modifier
                             .size(170.dp, 250.dp)
                             .clickable {
-                                launcher.launch("image/*")
+                                galleryLauncher.launch("image/*")
                             }
                     )
                 }
@@ -151,14 +152,14 @@ fun AddEditBookScreen(
             ) {
                 OutlinedButton(
                     onClick = {
-                        launcher.launch("image/*")
+                        galleryLauncher.launch("image/*")
                     }) {
                     Text(text = "Choose Image")
                 }
 
                 OutlinedButton(
                     onClick = {
-                        //launcher.launch("image/*")
+                        cameraLauncher.launch()
                     }) {
                     Text(text = "Take a picture")
                 }

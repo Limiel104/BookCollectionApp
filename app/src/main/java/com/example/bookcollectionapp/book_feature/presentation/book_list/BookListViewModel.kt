@@ -6,6 +6,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.bookcollectionapp.book_feature.domain.model.Book
 import com.example.bookcollectionapp.book_feature.domain.use_case.BookUseCases
+import com.example.bookcollectionapp.book_feature.domain.util.BookOrder
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.flow.launchIn
@@ -26,7 +27,7 @@ class BookListViewModel @Inject constructor(
     private var getBookListJob: Job? = null
 
     init {
-        getBooks()
+        getBooks(BookOrder.TitleAscending())
     }
 
     fun onEvent(event: BookListEvent) {
@@ -43,14 +44,26 @@ class BookListViewModel @Inject constructor(
                     deletedBook = null
                 }
             }
+            is BookListEvent.Order -> {
+                if(state.value.bookOrder::class.java == event.bookOrder::class.java) {
+                    return
+                }
+                getBooks(event.bookOrder)
+            }
+            is BookListEvent.ToggleSortSection -> {
+                _state.value = state.value.copy(
+                    isSortSectionExpanded = !state.value.isSortSectionExpanded
+                )
+            }
         }
     }
 
-    private fun getBooks() {
+    private fun getBooks(bookOrder: BookOrder) {
         getBookListJob?.cancel()
-        getBookListJob = bookUseCases.getBooksUseCase().onEach { bookList ->
+        getBookListJob = bookUseCases.getBooksUseCase(bookOrder).onEach { bookList ->
             _state.value = state.value.copy(
-                bookList = bookList
+                bookList = bookList,
+                bookOrder = bookOrder
             )
         }.launchIn(viewModelScope)
     }

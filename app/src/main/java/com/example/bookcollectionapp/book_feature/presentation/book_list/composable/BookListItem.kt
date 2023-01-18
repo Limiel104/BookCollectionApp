@@ -1,12 +1,9 @@
 package com.example.bookcollectionapp.book_feature.presentation.book_list.composable
 
 import android.util.Log
-import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.material.Text
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Person
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -30,16 +27,8 @@ fun BookListItem(
         modifier = modifier.background(Color.LightGray),
         verticalAlignment = Alignment.CenterVertically
     ) {
+        Log.i("TAGBookList",book.imagePath)
 
-        Image(
-            imageVector = Icons.Default.Person,
-            contentDescription = "Book cover",
-            modifier = Modifier
-                .size(70.dp)
-                .background(Color.Gray)
-        )
-
-        Log.i("TAG1",book.imagePath)
         AsyncImage(
             model = book.imagePath,
             contentDescription = "Book cover",

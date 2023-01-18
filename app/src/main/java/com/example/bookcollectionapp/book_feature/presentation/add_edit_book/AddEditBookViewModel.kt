@@ -113,6 +113,7 @@ class AddEditBookViewModel @Inject constructor(
                         bookUseCases.addBookUseCase(
                             Book(
                                 id = bookToEditId,
+                                dateAdded = System.currentTimeMillis(),
                                 title = bookTitle.value.text,
                                 author = bookAuthor.value.text,
                                 publisher = bookPublisher.value.text,

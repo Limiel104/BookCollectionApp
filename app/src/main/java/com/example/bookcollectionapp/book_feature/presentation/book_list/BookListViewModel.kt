@@ -72,10 +72,11 @@ class BookListViewModel @Inject constructor(
 
     private fun getBooks(
         bookOrder: BookOrder,
-        query: String = _state.value.searchQuery.lowercase()
+        query: String = _state.value.searchQuery.lowercase(),
+        filter: String = "Mystery"
     ) {
         getBookListJob?.cancel()
-        getBookListJob = bookUseCases.getBooksUseCase(bookOrder,query).onEach { bookList ->
+        getBookListJob = bookUseCases.getBooksUseCase(bookOrder,query,filter).onEach { bookList ->
             _state.value = state.value.copy(
                 bookList = bookList,
                 bookOrder = bookOrder

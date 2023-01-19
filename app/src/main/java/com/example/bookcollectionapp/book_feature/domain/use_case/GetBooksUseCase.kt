@@ -12,9 +12,10 @@ class GetBooksUseCase(
 ) {
     operator fun invoke(
         bookOrder: BookOrder = BookOrder.TitleAscending(),
-        query: String
+        query: String,
+        filter: String
     ): Flow<List<Book>> {
-        if (query == "") {
+        if (query == "" && filter == "") {
             return repository.getBooks().map { books ->
                 when (bookOrder) {
                     is BookOrder.DateAscending -> books.sortedBy { it.dateAdded }
@@ -24,7 +25,7 @@ class GetBooksUseCase(
                 }
             }
         }
-        else {
+        else if (query != "") {
             return flow {
                 emit(repository.searchBookList(query))
             }.map { books ->
@@ -36,6 +37,17 @@ class GetBooksUseCase(
                 }
             }
         }
-
+        else {
+            return flow {
+                emit(repository.filterBookList(filter))
+            }.map { books ->
+                when (bookOrder) {
+                    is BookOrder.DateAscending -> books.sortedBy { it.dateAdded }
+                    is BookOrder.DateDescending -> books.sortedByDescending { it.dateAdded }
+                    is BookOrder.TitleAscending -> books.sortedBy { it.title.lowercase() }
+                    is BookOrder.TitleDescending -> books.sortedByDescending { it.title.lowercase() }
+                }
+            }
+        }
     }
 }

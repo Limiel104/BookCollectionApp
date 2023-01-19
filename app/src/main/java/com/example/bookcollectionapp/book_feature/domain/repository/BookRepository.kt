@@ -14,4 +14,6 @@ interface BookRepository {
     suspend fun deleteBook(book: Book)
 
     suspend fun searchBookList(query: String): List<Book>
+
+    suspend fun filterBookList(filter: String): List<Book>
 }

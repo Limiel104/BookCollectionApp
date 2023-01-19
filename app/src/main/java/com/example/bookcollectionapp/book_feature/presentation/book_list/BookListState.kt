@@ -6,5 +6,6 @@ import com.example.bookcollectionapp.book_feature.domain.util.BookOrder
 data class BookListState(
     val bookList: List<Book> = emptyList(),
     val bookOrder: BookOrder = BookOrder.TitleAscending(),
-    val isSortSectionExpanded: Boolean = false
+    val isSortSectionExpanded: Boolean = false,
+    val searchQuery: String = ""
 )

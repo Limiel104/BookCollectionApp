@@ -9,6 +9,7 @@ import com.example.bookcollectionapp.book_feature.domain.use_case.BookUseCases
 import com.example.bookcollectionapp.book_feature.domain.util.BookOrder
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Job
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.launch
@@ -25,6 +26,7 @@ class BookListViewModel @Inject constructor(
     private var deletedBook: Book? = null
 
     private var getBookListJob: Job? = null
+    private var searchQueryJob: Job? = null
 
     init {
         getBooks(BookOrder.TitleAscending())
@@ -55,12 +57,25 @@ class BookListViewModel @Inject constructor(
                     isSortSectionExpanded = !state.value.isSortSectionExpanded
                 )
             }
+            is BookListEvent.OnSearchQueryChange -> {
+                _state.value = state.value.copy(
+                    searchQuery = event.query
+                )
+                searchQueryJob?.cancel()
+                searchQueryJob = viewModelScope.launch {
+                    delay(500L)
+                    getBooks(_state.value.bookOrder)
+                }
+            }
         }
     }
 
-    private fun getBooks(bookOrder: BookOrder) {
+    private fun getBooks(
+        bookOrder: BookOrder,
+        query: String = _state.value.searchQuery.lowercase()
+    ) {
         getBookListJob?.cancel()
-        getBookListJob = bookUseCases.getBooksUseCase(bookOrder).onEach { bookList ->
+        getBookListJob = bookUseCases.getBooksUseCase(bookOrder,query).onEach { bookList ->
             _state.value = state.value.copy(
                 bookList = bookList,
                 bookOrder = bookOrder

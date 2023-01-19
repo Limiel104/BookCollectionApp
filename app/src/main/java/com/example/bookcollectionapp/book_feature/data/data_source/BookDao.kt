@@ -18,4 +18,15 @@ interface BookDao {
 
     @Delete
     suspend fun deleteBook(book: Book)
+
+    @Query(
+        """
+            SELECT *
+            FROM book
+            WHERE LOWER(title) LIKE '%' || LOWER(:query) || '%'
+            OR LOWER(author) LIKE '%' || LOWER(:query) || '%'
+            OR LOWER(publisher) LIKE '%' || LOWER(:query) || '%'
+        """
+    )
+    suspend fun searchBookList(query: String): List<Book>
 }

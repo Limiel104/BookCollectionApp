@@ -95,13 +95,15 @@ fun BookListScreen(
             Spacer(modifier = Modifier.height(10.dp))
 
             OutlinedTextField(
-                value = "",
-                onValueChange = { /*TODO*/},
+                value = state.searchQuery,
+                onValueChange = { query ->
+                    viewModel.onEvent(BookListEvent.OnSearchQueryChange(query))
+                },
                 modifier = Modifier
                     .padding(5.dp, 10.dp)
                     .fillMaxWidth(),
                 placeholder = {
-                    Text(text = "Search...")
+                    Text(text = "Search title, author or publisher...")
                 },
                 maxLines = 1,
                 singleLine = true

@@ -24,4 +24,8 @@ class BookRepositoryImpl(
     override suspend fun deleteBook(book: Book) {
         dao.deleteBook(book)
     }
+
+    override suspend fun searchBookList(query: String): List<Book> {
+        return dao.searchBookList(query)
+    }
 }

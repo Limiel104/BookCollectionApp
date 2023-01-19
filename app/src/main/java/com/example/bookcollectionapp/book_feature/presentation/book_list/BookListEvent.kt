@@ -6,6 +6,8 @@ import com.example.bookcollectionapp.book_feature.domain.util.BookOrder
 sealed class BookListEvent {
     data class DeleteBook(val book: Book): BookListEvent()
     data class Order(val bookOrder: BookOrder): BookListEvent()
+    data class OnSearchQueryChange(val query: String): BookListEvent()
     object RestoreBook: BookListEvent()
     object ToggleSortSection: BookListEvent()
+
 }

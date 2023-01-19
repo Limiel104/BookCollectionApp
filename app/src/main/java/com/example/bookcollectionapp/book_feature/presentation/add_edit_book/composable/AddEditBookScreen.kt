@@ -13,13 +13,18 @@ import androidx.compose.foundation.layout.*
 import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
+import androidx.compose.material.icons.filled.KeyboardArrowDown
+import androidx.compose.material.icons.filled.KeyboardArrowUp
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.layout.onGloballyPositioned
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.toSize
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import coil.compose.AsyncImage
@@ -42,6 +47,7 @@ fun AddEditBookScreen(
     val titleState = viewModel.bookTitle.value
     val authorState = viewModel.bookAuthor.value
     val publisherState = viewModel.bookPublisher.value
+    val genreState = viewModel.bookGenre.value
     val imagePathState = viewModel.bookImagePath.value
 
     val context = LocalContext.current
@@ -73,6 +79,15 @@ fun AddEditBookScreen(
         File(dirPath, fileName).write(bitmap!!, Bitmap.CompressFormat.JPEG, 40)
         viewModel.onEvent(AddEditBookEvent.PickedImage(filePath))
     }
+
+    val icon = if (genreState.isExpanded) {
+        Icons.Default.KeyboardArrowUp
+    }
+    else {
+        Icons.Default.KeyboardArrowDown
+    }
+
+    val list = listOf("Action", "Adventure", "Comedy", "Fantasy", "Historical Fiction", "Horror", "Mystery", "Nonfiction", "Romance", "Science Fiction", "Thriller")
 
     val scaffoldState = rememberScaffoldState()
 
@@ -195,6 +210,54 @@ fun AddEditBookScreen(
                 singleLine = true,
                 modifier = Modifier.fillMaxWidth()
             )
+
+            Column(
+            ) {
+                OutlinedTextField(
+                    value = genreState.selectedOption,
+                    onValueChange = {viewModel.onEvent(AddEditBookEvent.ChosenGenre(it))},
+                    label = {
+                        Text(text = "Genre")
+                    },
+                    trailingIcon = {
+                        Icon(
+                            imageVector = icon,
+                            contentDescription = "Genre",
+                            modifier = Modifier
+                                .clickable {
+                                    viewModel.onEvent(AddEditBookEvent.DropdownMenuStateChanged(!genreState.isExpanded))
+                                }
+                        )
+                    },
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .onGloballyPositioned { coordinates ->
+                            viewModel.onEvent(AddEditBookEvent.SizeOfTextFieldChanged(coordinates.size.toSize()))
+                        },
+                    readOnly = true
+                )
+
+                DropdownMenu(
+                    expanded = genreState.isExpanded,
+                    onDismissRequest = { viewModel.onEvent(AddEditBookEvent.DropdownMenuStateChanged(false)) },
+                    modifier = Modifier
+                        .width(with(LocalDensity.current){
+                            genreState.textFieldSize.width.toDp()
+                        })
+                ) {
+                    list.forEach { option ->
+                        DropdownMenuItem(
+                            onClick = {
+                                viewModel.onEvent(AddEditBookEvent.ChosenGenre(option))
+                                viewModel.onEvent(AddEditBookEvent.DropdownMenuStateChanged(false))
+                            }
+                        ) {
+                            Text(text = option)
+                        }
+                    }
+                }
+            }
+
         }
     }
 }

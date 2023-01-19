@@ -26,7 +26,7 @@ fun SortSection(
             SortSectionItem(
                 text = "Title A-Z",
                 selected = bookOrder is BookOrder.TitleAscending,
-                onSelected = { onOrderChange(BookOrder.TitleAscending()) }
+                onClick = { onOrderChange(BookOrder.TitleAscending()) }
             )
 
             Spacer(modifier = Modifier.width(10.dp))
@@ -34,7 +34,7 @@ fun SortSection(
             SortSectionItem(
                 text = "Most Recent",
                 selected = bookOrder is BookOrder.DateDescending,
-                onSelected = { onOrderChange(BookOrder.DateDescending()) }
+                onClick = { onOrderChange(BookOrder.DateDescending()) }
             )
         }
 
@@ -49,7 +49,7 @@ fun SortSection(
             SortSectionItem(
                 text = "Title Z-A",
                 selected = bookOrder is BookOrder.TitleDescending,
-                onSelected = { onOrderChange(BookOrder.TitleDescending()) }
+                onClick = { onOrderChange(BookOrder.TitleDescending()) }
             )
 
             Spacer(modifier = Modifier.width(10.dp))
@@ -57,7 +57,7 @@ fun SortSection(
             SortSectionItem(
                 text = "Least Recent",
                 selected = bookOrder is BookOrder.DateAscending,
-                onSelected = { onOrderChange(BookOrder.DateAscending()) }
+                onClick = { onOrderChange(BookOrder.DateAscending()) }
             )
         }
     }

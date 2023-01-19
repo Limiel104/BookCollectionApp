@@ -14,7 +14,7 @@ import androidx.compose.ui.text.font.FontWeight
 fun SortSectionItem(
     text: String,
     selected: Boolean,
-    onSelected: () -> Unit,
+    onClick: () -> Unit,
     modifier: Modifier = Modifier
 ) {
     Row(
@@ -23,7 +23,7 @@ fun SortSectionItem(
     ){
         RadioButton(
             selected = selected,
-            onClick = onSelected,
+            onClick = onClick,
             colors = RadioButtonDefaults.colors(
                 selectedColor = Color.Green,
                 unselectedColor = Color.LightGray

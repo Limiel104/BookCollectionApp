@@ -14,6 +14,17 @@ class GetBooksUseCase(
         bookOrder: BookOrder = BookOrder.TitleAscending(),
         query: String
     ): Flow<List<Book>> {
+        if (query == "") {
+            return repository.getBooks().map { books ->
+                when (bookOrder) {
+                    is BookOrder.DateAscending -> books.sortedBy { it.dateAdded }
+                    is BookOrder.DateDescending -> books.sortedByDescending { it.dateAdded }
+                    is BookOrder.TitleAscending -> books.sortedBy { it.title.lowercase() }
+                    is BookOrder.TitleDescending -> books.sortedByDescending { it.title.lowercase() }
+                }
+            }
+        }
+        else {
             return flow {
                 emit(repository.searchBookList(query))
             }.map { books ->
@@ -24,5 +35,7 @@ class GetBooksUseCase(
                     is BookOrder.TitleDescending -> books.sortedByDescending { it.title.lowercase() }
                 }
             }
+        }
+
     }
 }

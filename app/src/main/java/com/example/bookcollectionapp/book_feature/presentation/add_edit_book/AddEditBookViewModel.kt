@@ -34,6 +34,9 @@ class AddEditBookViewModel @Inject constructor(
     private val _bookPublisher = mutableStateOf(BookTextFieldState())
     val bookPublisher: State<BookTextFieldState> = _bookPublisher
 
+    private val _bookGenre = mutableStateOf(DropdownMenuState())
+    val bookGenre: State<DropdownMenuState> = _bookGenre
+
     private val _bookImagePath = mutableStateOf(BookImagePathState())
     val bookImagePath: State<BookImagePathState> = _bookImagePath
 
@@ -57,6 +60,9 @@ class AddEditBookViewModel @Inject constructor(
                         _bookPublisher.value = bookPublisher.value.copy(
                             text = book.publisher,
 //                            isHintVisible = false
+                        )
+                        _bookGenre.value = bookGenre.value.copy(
+                            selectedOption = book.genre
                         )
                         _bookImagePath.value = bookImagePath.value.copy(
                             imagePath = book.imagePath,
@@ -96,6 +102,21 @@ class AddEditBookViewModel @Inject constructor(
                     text = event.value
                 )
             }
+            is AddEditBookEvent.ChosenGenre -> {
+                _bookGenre.value = bookGenre.value.copy(
+                    selectedOption = event.value
+                )
+            }
+            is AddEditBookEvent.DropdownMenuStateChanged -> {
+                _bookGenre.value = bookGenre.value.copy(
+                    isExpanded = event.value
+                )
+            }
+            is AddEditBookEvent.SizeOfTextFieldChanged -> {
+                _bookGenre.value = bookGenre.value.copy(
+                    textFieldSize = event.value
+                )
+            }
             is AddEditBookEvent.PickedImage -> {
                 _bookImagePath.value = bookImagePath.value.copy(
                     imagePath = event.value,
@@ -117,6 +138,7 @@ class AddEditBookViewModel @Inject constructor(
                                 title = bookTitle.value.text,
                                 author = bookAuthor.value.text,
                                 publisher = bookPublisher.value.text,
+                                genre = bookGenre.value.selectedOption,
                                 imagePath = bookImagePath.value.imagePath,
                                 imageFileName = bookImagePath.value.imageFileName
                             )

@@ -2,9 +2,11 @@ package com.example.bookcollectionapp.book_feature.presentation.book_list.compos
 
 import androidx.compose.animation.*
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.horizontalScroll
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.rememberScrollState
 import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
@@ -19,6 +21,7 @@ import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import com.example.bookcollectionapp.R
+import com.example.bookcollectionapp.book_feature.domain.util.getAllGenres
 import com.example.bookcollectionapp.book_feature.presentation.book_list.BookListEvent
 import com.example.bookcollectionapp.book_feature.presentation.book_list.BookListViewModel
 import com.example.bookcollectionapp.book_feature.presentation.util.Screen
@@ -31,6 +34,7 @@ fun BookListScreen(
     val state = viewModel.state.value
     val scaffoldState = rememberScaffoldState()
     val scope = rememberCoroutineScope()
+    val scrollState = rememberScrollState()
 
     Scaffold(
         floatingActionButton = {
@@ -45,7 +49,7 @@ fun BookListScreen(
             }
         },
         scaffoldState = scaffoldState
-    ) {
+    ) { padding ->
         Column(
             modifier = Modifier
                 .fillMaxSize()
@@ -74,6 +78,7 @@ fun BookListScreen(
                     )
                 }
             }
+
             AnimatedVisibility(
                 visible = state.isSortSectionExpanded,
                 enter = fadeIn() + slideInVertically(),
@@ -108,6 +113,25 @@ fun BookListScreen(
                 maxLines = 1,
                 singleLine = true
             )
+
+            Row(
+                modifier = Modifier
+                    .horizontalScroll(
+                        state = scrollState
+                    )
+            ) {
+                for (genre in getAllGenres()) {
+                    FilterSectionItem(
+                        text = genre.value,
+                        isSelected = state.filter == genre.value,
+                        onClick = {
+                            viewModel.onEvent(BookListEvent.OnFilterChange(it))
+                        }
+                    )
+                }
+            }
+
+            Spacer(modifier = Modifier.height(10.dp))
             
             LazyColumn(
                 modifier = Modifier.fillMaxSize()

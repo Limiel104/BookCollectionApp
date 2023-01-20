@@ -30,6 +30,7 @@ import androidx.navigation.NavController
 import coil.compose.AsyncImage
 import coil.request.ImageRequest
 import com.example.bookcollectionapp.R
+import com.example.bookcollectionapp.book_feature.domain.util.getAllGenresAsStrings
 import com.example.bookcollectionapp.book_feature.presentation.add_edit_book.AddEditBookEvent
 import com.example.bookcollectionapp.book_feature.presentation.add_edit_book.AddEditBookViewModel
 import com.example.bookcollectionapp.book_feature.presentation.add_edit_book.UiEvent
@@ -87,7 +88,7 @@ fun AddEditBookScreen(
         Icons.Default.KeyboardArrowDown
     }
 
-    val list = listOf("Action", "Adventure", "Comedy", "Fantasy", "Historical Fiction", "Horror", "Mystery", "Nonfiction", "Romance", "Science Fiction", "Thriller")
+    val list = getAllGenresAsStrings()
 
     val scaffoldState = rememberScaffoldState()
 
@@ -117,7 +118,7 @@ fun AddEditBookScreen(
             }
         },
         scaffoldState = scaffoldState
-    ) {
+    ) { padding ->
         Column(
             modifier = Modifier
                 .fillMaxSize()

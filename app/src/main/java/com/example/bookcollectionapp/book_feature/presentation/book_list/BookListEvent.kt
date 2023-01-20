@@ -7,7 +7,7 @@ sealed class BookListEvent {
     data class DeleteBook(val book: Book): BookListEvent()
     data class Order(val bookOrder: BookOrder): BookListEvent()
     data class OnSearchQueryChange(val query: String): BookListEvent()
+    data class OnFilterChange(val filter: String): BookListEvent()
     object RestoreBook: BookListEvent()
     object ToggleSortSection: BookListEvent()
-
 }

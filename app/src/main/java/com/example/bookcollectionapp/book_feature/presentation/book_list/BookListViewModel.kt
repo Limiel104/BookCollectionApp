@@ -67,20 +67,37 @@ class BookListViewModel @Inject constructor(
                     getBooks(_state.value.bookOrder)
                 }
             }
+            is BookListEvent.OnFilterChange -> {
+                _state.value = state.value.copy(
+                    filter = event.filter
+                )
+                getBooks(_state.value.bookOrder)
+            }
         }
     }
 
     private fun getBooks(
         bookOrder: BookOrder,
         query: String = _state.value.searchQuery.lowercase(),
-        filter: String = "Mystery"
+        filter: String = _state.value.filter
     ) {
         getBookListJob?.cancel()
-        getBookListJob = bookUseCases.getBooksUseCase(bookOrder,query,filter).onEach { bookList ->
-            _state.value = state.value.copy(
-                bookList = bookList,
-                bookOrder = bookOrder
-            )
-        }.launchIn(viewModelScope)
+        if(filter == "All") {
+            getBookListJob = bookUseCases.getBooksUseCase(bookOrder,query,"").onEach { bookList ->
+                _state.value = state.value.copy(
+                    bookList = bookList,
+                    bookOrder = bookOrder
+                )
+            }.launchIn(viewModelScope)
+        }
+        else {
+            getBookListJob = bookUseCases.getBooksUseCase(bookOrder,query,filter).onEach { bookList ->
+                _state.value = state.value.copy(
+                    bookList = bookList,
+                    bookOrder = bookOrder
+                )
+            }.launchIn(viewModelScope)
+        }
+
     }
 }

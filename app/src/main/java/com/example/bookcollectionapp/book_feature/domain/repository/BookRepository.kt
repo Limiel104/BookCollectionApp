@@ -16,4 +16,6 @@ interface BookRepository {
     suspend fun searchBookList(query: String): List<Book>
 
     suspend fun filterBookList(filter: String): List<Book>
+
+    suspend fun searchAndFilterBookList(query: String, filter: String): List<Book>
 }

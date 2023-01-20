@@ -38,4 +38,16 @@ interface BookDao {
         """
     )
     suspend fun filterBookList(filter: String): List<Book>
+
+    @Query(
+        """
+            SELECT *
+            FROM book
+            WHERE genre LIKE :filter
+            AND (LOWER(title) LIKE '%' || LOWER(:query) || '%'
+            OR LOWER(author) LIKE '%' || LOWER(:query) || '%'
+            OR LOWER(publisher) LIKE '%' || LOWER(:query) || '%')
+        """
+    )
+    suspend fun searchAndFilterBookList(query: String, filter: String): List<Book>
 }

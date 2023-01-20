@@ -17,37 +17,38 @@ class GetBooksUseCase(
     ): Flow<List<Book>> {
         if (query == "" && filter == "") {
             return repository.getBooks().map { books ->
-                when (bookOrder) {
-                    is BookOrder.DateAscending -> books.sortedBy { it.dateAdded }
-                    is BookOrder.DateDescending -> books.sortedByDescending { it.dateAdded }
-                    is BookOrder.TitleAscending -> books.sortedBy { it.title.lowercase() }
-                    is BookOrder.TitleDescending -> books.sortedByDescending { it.title.lowercase() }
-                }
+                sortByBookOrder(books,bookOrder)
             }
         }
-        else if (query != "") {
+        else if (query != "" && filter == "") {
             return flow {
                 emit(repository.searchBookList(query))
             }.map { books ->
-                when (bookOrder) {
-                    is BookOrder.DateAscending -> books.sortedBy { it.dateAdded }
-                    is BookOrder.DateDescending -> books.sortedByDescending { it.dateAdded }
-                    is BookOrder.TitleAscending -> books.sortedBy { it.title.lowercase() }
-                    is BookOrder.TitleDescending -> books.sortedByDescending { it.title.lowercase() }
-                }
+                sortByBookOrder(books,bookOrder)
+            }
+        }
+        else if (filter != "" && query == "") {
+            return flow {
+                emit(repository.filterBookList(filter))
+            }.map { books ->
+                sortByBookOrder(books,bookOrder)
             }
         }
         else {
             return flow {
-                emit(repository.filterBookList(filter))
+                emit(repository.searchAndFilterBookList(query,filter))
             }.map { books ->
-                when (bookOrder) {
-                    is BookOrder.DateAscending -> books.sortedBy { it.dateAdded }
-                    is BookOrder.DateDescending -> books.sortedByDescending { it.dateAdded }
-                    is BookOrder.TitleAscending -> books.sortedBy { it.title.lowercase() }
-                    is BookOrder.TitleDescending -> books.sortedByDescending { it.title.lowercase() }
-                }
+                sortByBookOrder(books,bookOrder)
             }
+        }
+    }
+
+    private fun sortByBookOrder(books: List<Book>, bookOrder: BookOrder):  List<Book>{
+        return when (bookOrder) {
+            is BookOrder.DateAscending -> books.sortedBy { it.dateAdded }
+            is BookOrder.DateDescending -> books.sortedByDescending { it.dateAdded }
+            is BookOrder.TitleAscending -> books.sortedBy { it.title.lowercase() }
+            is BookOrder.TitleDescending -> books.sortedByDescending { it.title.lowercase() }
         }
     }
 }

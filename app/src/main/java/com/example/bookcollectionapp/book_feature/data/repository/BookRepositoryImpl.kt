@@ -32,4 +32,8 @@ class BookRepositoryImpl(
     override suspend fun filterBookList(filter: String): List<Book> {
         return dao.filterBookList(filter)
     }
+
+    override suspend fun searchAndFilterBookList(query: String, filter: String): List<Book> {
+        return dao.searchAndFilterBookList(query,filter)
+    }
 }

@@ -1,19 +1,23 @@
 package com.example.bookcollectionapp.book_feature.presentation.book_list.composable
 
+import android.util.Log
 import androidx.compose.animation.*
+import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.horizontalScroll
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
+import androidx.compose.material.icons.filled.Delete
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
@@ -25,7 +29,9 @@ import com.example.bookcollectionapp.book_feature.domain.util.getAllGenres
 import com.example.bookcollectionapp.book_feature.presentation.book_list.BookListEvent
 import com.example.bookcollectionapp.book_feature.presentation.book_list.BookListViewModel
 import com.example.bookcollectionapp.book_feature.presentation.util.Screen
+import kotlinx.coroutines.launch
 
+@OptIn(ExperimentalMaterialApi::class)
 @Composable
 fun BookListScreen(
     navController: NavController,
@@ -136,15 +142,67 @@ fun BookListScreen(
             LazyColumn(
                 modifier = Modifier.fillMaxSize()
             ){
-                items(state.bookList) { book ->
-                    BookListItem(
-                        book = book,
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .clickable {
-                                navController.navigate(Screen.BookDetailsScreen.route + "bookId=${book.id}")
+                itemsIndexed(
+                    items = state.bookList,
+                    key = { index, item ->
+                        item.hashCode()
+                    }
+                ) { index, book ->
+                    val dismissState = rememberDismissState(
+                        confirmStateChange = {
+                            if(it == DismissValue.DismissedToStart) {
+                                Log.i("TAG","usuwam   " + book.title)
+                                viewModel.onEvent(BookListEvent.DeleteBook(book))
+                                scope.launch {
+                                    val result = scaffoldState.snackbarHostState.showSnackbar(
+                                        message = "Book deleted",
+                                        actionLabel = "Undo"
+                                    )
+                                    if(result == SnackbarResult.ActionPerformed) {
+                                        viewModel.onEvent(BookListEvent.RestoreBook)
+                                    }
+                                }
                             }
+                            true
+                        }
                     )
+
+                    SwipeToDismiss(
+                        state = dismissState,
+                        background = {
+                            val color = when(dismissState.dismissDirection) {
+                                DismissDirection.StartToEnd -> Color.Transparent
+                                DismissDirection.EndToStart -> Color.Red
+                                null -> Color.Transparent
+                            }
+
+                            Box(
+                                modifier = Modifier
+                                    .fillMaxSize()
+                                    .background(color)
+                                    .padding(8.dp)
+                            ){
+                                Icon(
+                                    imageVector = Icons.Default.Delete,
+                                    contentDescription = "Delete book",
+                                    tint = Color.White,
+                                    modifier = Modifier.align(Alignment.CenterEnd)
+                                )
+                            }
+                        },
+                        dismissContent = {
+                            BookListItem(
+                                book = book,
+                                modifier = Modifier
+                                    .fillMaxWidth()
+                                    .clickable {
+                                        navController.navigate(Screen.BookDetailsScreen.route + "bookId=${book.id}")
+                                    }
+                            )
+                        },
+                        directions = setOf(DismissDirection.EndToStart)
+                    )
+
                     Spacer(modifier = Modifier.height(10.dp))
                 }
             }

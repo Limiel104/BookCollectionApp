@@ -142,7 +142,7 @@ fun BookListScreen(
                         modifier = Modifier
                             .fillMaxWidth()
                             .clickable {
-                                navController.navigate(Screen.AddEditBookScreen.route + "?bookId=${book.id}")
+                                navController.navigate(Screen.BookDetailsScreen.route + "bookId=${book.id}")
                             }
                     )
                     Spacer(modifier = Modifier.height(10.dp))

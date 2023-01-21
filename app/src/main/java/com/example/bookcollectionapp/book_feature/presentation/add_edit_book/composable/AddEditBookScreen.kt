@@ -34,6 +34,7 @@ import com.example.bookcollectionapp.book_feature.domain.util.getAllGenresAsStri
 import com.example.bookcollectionapp.book_feature.presentation.add_edit_book.AddEditBookEvent
 import com.example.bookcollectionapp.book_feature.presentation.add_edit_book.AddEditBookViewModel
 import com.example.bookcollectionapp.book_feature.presentation.add_edit_book.UiEvent
+import com.example.bookcollectionapp.book_feature.presentation.util.Screen
 import com.example.bookcollectionapp.common.write
 import kotlinx.coroutines.flow.collectLatest
 import java.io.File
@@ -101,7 +102,10 @@ fun AddEditBookScreen(
                     )
                 }
                 is UiEvent.SaveBook -> {
-                    navController.navigateUp()
+                    navController.popBackStack(Screen.BookListScreen.route,
+                        inclusive = false,
+                        saveState = false
+                    )
                 }
             }
         }
@@ -258,7 +262,6 @@ fun AddEditBookScreen(
                     }
                 }
             }
-
         }
     }
 }

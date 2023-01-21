@@ -11,6 +11,7 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
 import com.example.bookcollectionapp.book_feature.presentation.add_edit_book.composable.AddEditBookScreen
+import com.example.bookcollectionapp.book_feature.presentation.book_details.composable.BookDetailsScreen
 import com.example.bookcollectionapp.book_feature.presentation.book_list.composable.BookListScreen
 import com.example.bookcollectionapp.book_feature.presentation.util.Screen
 import com.example.bookcollectionapp.ui.theme.BookCollectionAppTheme
@@ -47,6 +48,18 @@ class MainActivity : ComponentActivity() {
                             )
                         ) {
                             AddEditBookScreen(navController = navController)
+                        }
+                        composable(
+                            route = Screen.BookDetailsScreen.route + "bookId={bookId}",
+                            arguments = listOf(
+                                navArgument(
+                                    name = "bookId"
+                                ) {
+                                    type = NavType.IntType
+                                }
+                            )
+                        ) {
+                            BookDetailsScreen(navController = navController)
                         }
                     }
                 }

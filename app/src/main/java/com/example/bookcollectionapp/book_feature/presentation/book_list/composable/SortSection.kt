@@ -2,26 +2,25 @@ package com.example.bookcollectionapp.book_feature.presentation.book_list.compos
 
 import androidx.compose.foundation.layout.*
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import com.example.bookcollectionapp.book_feature.domain.util.BookOrder
 
 @Composable
 fun SortSection(
-    modifier: Modifier = Modifier,
     bookOrder: BookOrder = BookOrder.TitleAscending(),
     onOrderChange: (BookOrder) -> Unit
 ) {
-    Column(
-        modifier = modifier
+    Row(
+        modifier = Modifier
+            .fillMaxWidth(),
+        horizontalArrangement = Arrangement.SpaceEvenly,
+        verticalAlignment = Alignment.CenterVertically
     ) {
-        Row(
+        Column(
             modifier = Modifier
-                .fillMaxWidth()
-                .padding(
-                    horizontal = 10.dp
-                ),
-            horizontalArrangement = Arrangement.SpaceEvenly
+                .padding(top = 10.dp),
         ) {
             SortSectionItem(
                 text = "Title A-Z",
@@ -29,30 +28,26 @@ fun SortSection(
                 onClick = { onOrderChange(BookOrder.TitleAscending()) }
             )
 
-            Spacer(modifier = Modifier.width(10.dp))
+            Spacer(modifier = Modifier.height(5.dp))
 
-            SortSectionItem(
-                text = "Most Recent",
-                selected = bookOrder is BookOrder.DateDescending,
-                onClick = { onOrderChange(BookOrder.DateDescending()) }
-            )
-        }
-
-        Row(
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(
-                    horizontal = 10.dp
-                ),
-            horizontalArrangement = Arrangement.SpaceEvenly
-        ) {
             SortSectionItem(
                 text = "Title Z-A",
                 selected = bookOrder is BookOrder.TitleDescending,
                 onClick = { onOrderChange(BookOrder.TitleDescending()) }
             )
+        }
 
-            Spacer(modifier = Modifier.width(10.dp))
+        Column(
+            modifier = Modifier
+                .padding(top = 10.dp),
+        ) {
+            SortSectionItem(
+                text = "Most Recent",
+                selected = bookOrder is BookOrder.DateDescending,
+                onClick = { onOrderChange(BookOrder.DateDescending()) }
+            )
+
+            Spacer(modifier = Modifier.height(5.dp))
 
             SortSectionItem(
                 text = "Least Recent",

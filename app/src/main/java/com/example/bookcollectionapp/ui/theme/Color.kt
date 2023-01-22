@@ -2,7 +2,12 @@ package com.example.bookcollectionapp.ui.theme
 
 import androidx.compose.ui.graphics.Color
 
-val Purple200 = Color(0xFFBB86FC)
-val Purple500 = Color(0xFF6200EE)
-val Purple700 = Color(0xFF3700B3)
-val Teal200 = Color(0xFF03DAC5)
+val Blue = Color(162, 210, 255)
+val BlueLight = Color(189, 224, 254)
+val BlueDark = Color(120, 190, 255)
+val BlueDark2 = Color(0, 132, 255)
+val Lavender = Color(205, 180, 219)
+val Gray = Color(135, 135, 135)
+val GrayLight = Color(163, 163, 163)
+val GrayDark = Color(122, 122, 122)
+val Pink = Color(229, 180, 190)

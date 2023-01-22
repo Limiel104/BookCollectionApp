@@ -1,6 +1,5 @@
 package com.example.bookcollectionapp.book_feature.presentation.book_list.composable
 
-import android.util.Log
 import androidx.compose.animation.*
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
@@ -9,17 +8,19 @@ import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.Delete
+import androidx.compose.material.icons.filled.Search
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
-import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
@@ -29,6 +30,7 @@ import com.example.bookcollectionapp.book_feature.domain.util.getAllGenres
 import com.example.bookcollectionapp.book_feature.presentation.book_list.BookListEvent
 import com.example.bookcollectionapp.book_feature.presentation.book_list.BookListViewModel
 import com.example.bookcollectionapp.book_feature.presentation.util.Screen
+import com.example.bookcollectionapp.ui.theme.Pink
 import kotlinx.coroutines.launch
 
 @OptIn(ExperimentalMaterialApi::class)
@@ -51,6 +53,7 @@ fun BookListScreen(
             ) {
                 Icon(
                     imageVector = Icons.Default.Add,
+                    tint = Color.White,
                     contentDescription = "Add book")
             }
         },
@@ -59,30 +62,53 @@ fun BookListScreen(
         Column(
             modifier = Modifier
                 .fillMaxSize()
-                .padding(10.dp, 0.dp)
+                .padding(horizontal = 10.dp)
         ) {
             Row(
-                modifier = Modifier.fillMaxWidth(),
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .background(MaterialTheme.colors.background)
+                    .padding(top = 10.dp),
                 horizontalArrangement = Arrangement.SpaceBetween,
                 verticalAlignment = Alignment.CenterVertically
             ) {
-                Text(
-                    text = "My Books",
-                    fontWeight = FontWeight.Bold,
-                    fontSize = 30.sp,
-
+                OutlinedTextField(
+                    value = state.searchQuery,
+                    textStyle = TextStyle(fontSize = 13.sp),
+                    onValueChange = { query ->
+                        viewModel.onEvent(BookListEvent.OnSearchQueryChange(query))
+                    },
+                    modifier = Modifier
+                        .weight(1f)
+                        .height(50.dp)
+                        .background(MaterialTheme.colors.background),
+                    placeholder = {
+                        Text(
+                            text = "Search title, author or publisher...",
+                            fontSize = 13.sp
+                        )
+                    },
+                    maxLines = 1,
+                    singleLine = true,
+                    shape = RoundedCornerShape(50.dp),
+                    trailingIcon = {
+                        IconButton(
+                            onClick = {
+                                viewModel.onEvent(BookListEvent.ToggleSortSection)
+                            }
+                        ) {
+                            Icon(
+                                painter = painterResource(id = R.drawable.ic_sort),
+                                contentDescription = "cod")
+                        }
+                    },
+                    leadingIcon = {
+                        Icon(
+                            imageVector = Icons.Default.Search,
+                            contentDescription = "Search"
+                        )
+                    },
                 )
-
-                IconButton(
-                    onClick = {
-                        viewModel.onEvent(BookListEvent.ToggleSortSection)
-                    }
-                ) {
-                    Icon(
-                        painter = painterResource(id = R.drawable.ic_sort),
-                        contentDescription = "Sort button"
-                    )
-                }
             }
 
             AnimatedVisibility(
@@ -95,30 +121,10 @@ fun BookListScreen(
                     onOrderChange = {
                         viewModel.onEvent(BookListEvent.Order(it))
                     },
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(
-                            vertical = 10.dp
-                        )
                 )
             }
 
             Spacer(modifier = Modifier.height(10.dp))
-
-            OutlinedTextField(
-                value = state.searchQuery,
-                onValueChange = { query ->
-                    viewModel.onEvent(BookListEvent.OnSearchQueryChange(query))
-                },
-                modifier = Modifier
-                    .padding(5.dp, 10.dp)
-                    .fillMaxWidth(),
-                placeholder = {
-                    Text(text = "Search title, author or publisher...")
-                },
-                maxLines = 1,
-                singleLine = true
-            )
 
             Row(
                 modifier = Modifier
@@ -140,7 +146,8 @@ fun BookListScreen(
             Spacer(modifier = Modifier.height(10.dp))
             
             LazyColumn(
-                modifier = Modifier.fillMaxSize()
+                modifier = Modifier
+                    .fillMaxSize()
             ){
                 itemsIndexed(
                     items = state.bookList,
@@ -151,7 +158,6 @@ fun BookListScreen(
                     val dismissState = rememberDismissState(
                         confirmStateChange = {
                             if(it == DismissValue.DismissedToStart) {
-                                Log.i("TAG","usuwam   " + book.title)
                                 viewModel.onEvent(BookListEvent.DeleteBook(book))
                                 scope.launch {
                                     val result = scaffoldState.snackbarHostState.showSnackbar(
@@ -172,7 +178,7 @@ fun BookListScreen(
                         background = {
                             val color = when(dismissState.dismissDirection) {
                                 DismissDirection.StartToEnd -> Color.Transparent
-                                DismissDirection.EndToStart -> Color.Red
+                                DismissDirection.EndToStart -> Pink
                                 null -> Color.Transparent
                             }
 
@@ -202,8 +208,7 @@ fun BookListScreen(
                         },
                         directions = setOf(DismissDirection.EndToStart)
                     )
-
-                    Spacer(modifier = Modifier.height(10.dp))
+                    Divider()
                 }
             }
         }

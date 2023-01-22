@@ -11,6 +11,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
+import com.example.bookcollectionapp.ui.theme.*
 
 @Composable
 fun FilterSectionItem(
@@ -23,9 +24,8 @@ fun FilterSectionItem(
         modifier = modifier.padding(end = 8.dp),
         elevation = 8.dp,
         shape = CircleShape,
-        color = if (isSelected) Color.Black else Color.LightGray,
-        border = BorderStroke(1.dp, Color.Black)
-
+        color = if (isSelected) Color.White else BlueDark,
+        border = BorderStroke(1.dp, Blue)
     ) {
         Row(
             modifier = Modifier
@@ -38,8 +38,8 @@ fun FilterSectionItem(
         ) {
             Text(
                 text = text,
-                color = Color.White,
-                modifier = Modifier.padding(5.dp)
+                color = if (isSelected) Color.Gray else Color.White,
+                modifier = Modifier.padding(7.dp,4.dp)
             )
         }
     }

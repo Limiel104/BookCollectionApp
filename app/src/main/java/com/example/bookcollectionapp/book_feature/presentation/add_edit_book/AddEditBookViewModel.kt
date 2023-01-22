@@ -1,5 +1,6 @@
 package com.example.bookcollectionapp.book_feature.presentation.add_edit_book
 
+import android.util.Log
 import androidx.compose.runtime.State
 import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.SavedStateHandle
@@ -20,6 +21,7 @@ class AddEditBookViewModel @Inject constructor(
 ): ViewModel() {
 
     private var bookToEditId: Int? = null
+    private var dateAdded: Long? = null
 
     private val _bookTitle = mutableStateOf(BookTextFieldState(
         hint = "Title"
@@ -40,6 +42,15 @@ class AddEditBookViewModel @Inject constructor(
     private val _bookImagePath = mutableStateOf(BookImagePathState())
     val bookImagePath: State<BookImagePathState> = _bookImagePath
 
+    private val _bookLanguage = mutableStateOf(DropdownMenuState())
+    val bookLanguage: State<DropdownMenuState> = _bookLanguage
+
+    private val _bookReadingStatus = mutableStateOf(DropdownMenuState())
+    val bookReadingStatus: State<DropdownMenuState> = _bookReadingStatus
+
+    private val _bookRating = mutableStateOf(DropdownMenuState())
+    val bookRating: State<DropdownMenuState> = _bookRating
+
     private val _eventFlow = MutableSharedFlow<UiEvent>()
     val eventFlow = _eventFlow.asSharedFlow()
 
@@ -49,6 +60,8 @@ class AddEditBookViewModel @Inject constructor(
                 viewModelScope.launch {
                     bookUseCases.getBookUseCase(bookId)?.also { book ->
                         bookToEditId = book.id
+                        dateAdded = book.dateAdded
+                        Log.i("TAG","data:   " + dateAdded.toString())
                         _bookTitle.value = bookTitle.value.copy(
                             text = book.title,
                             isHintVisible = false
@@ -71,7 +84,6 @@ class AddEditBookViewModel @Inject constructor(
                     }
                 }
             }
-
         }
     }
 
@@ -107,13 +119,58 @@ class AddEditBookViewModel @Inject constructor(
                     selectedOption = event.value
                 )
             }
-            is AddEditBookEvent.DropdownMenuStateChanged -> {
+            is AddEditBookEvent.GenreDropdownMenuStateChanged -> {
                 _bookGenre.value = bookGenre.value.copy(
                     isExpanded = event.value
                 )
             }
-            is AddEditBookEvent.SizeOfTextFieldChanged -> {
+            is AddEditBookEvent.SizeOfGenreTextFieldChanged -> {
                 _bookGenre.value = bookGenre.value.copy(
+                    textFieldSize = event.value
+                )
+            }
+            is AddEditBookEvent.ChosenLanguage -> {
+                _bookLanguage.value = bookLanguage.value.copy(
+                    selectedOption = event.value
+                )
+            }
+            is AddEditBookEvent.LanguageDropdownMenuStateChanged -> {
+                _bookLanguage.value = bookLanguage.value.copy(
+                    isExpanded = event.value
+                )
+            }
+            is AddEditBookEvent.SizeOfLanguageTextFieldChanged -> {
+                _bookLanguage.value = bookLanguage.value.copy(
+                    textFieldSize = event.value
+                )
+            }
+            is AddEditBookEvent.ChosenReadingStatus -> {
+                _bookReadingStatus.value = bookReadingStatus.value.copy(
+                    selectedOption = event.value
+                )
+            }
+            is AddEditBookEvent.ReadingStatusDropdownMenuStateChanged -> {
+                _bookReadingStatus.value = bookReadingStatus.value.copy(
+                    isExpanded = event.value
+                )
+            }
+            is AddEditBookEvent.SizeOfReadingStatusTextFieldChanged -> {
+                _bookReadingStatus.value = bookReadingStatus.value.copy(
+                    textFieldSize = event.value
+                )
+            }
+            is AddEditBookEvent.ChosenRating -> {
+                _bookRating.value = bookRating.value.copy(
+                    selectedOption = event.value
+                )
+            }
+            is AddEditBookEvent.RatingDropdownMenuStateChanged -> {
+                _bookRating.value = bookRating.value.copy(
+                    isExpanded = event.value
+                )
+            }
+            is AddEditBookEvent.SizeOfRatingTextFieldChanged -> {
+                _bookRating.value = bookRating.value.copy(
                     textFieldSize = event.value
                 )
             }

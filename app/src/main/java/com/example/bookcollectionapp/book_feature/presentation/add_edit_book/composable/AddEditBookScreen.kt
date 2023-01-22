@@ -4,10 +4,10 @@ import android.graphics.Bitmap
 import android.graphics.ImageDecoder
 import android.os.Build
 import android.provider.MediaStore
-import android.util.Log
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.activity.result.launch
+import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.material.*
@@ -18,6 +18,7 @@ import androidx.compose.material.icons.filled.KeyboardArrowUp
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.layout.onGloballyPositioned
 import androidx.compose.ui.platform.LocalContext
@@ -36,6 +37,8 @@ import com.example.bookcollectionapp.book_feature.presentation.add_edit_book.Add
 import com.example.bookcollectionapp.book_feature.presentation.add_edit_book.UiEvent
 import com.example.bookcollectionapp.book_feature.presentation.util.Screen
 import com.example.bookcollectionapp.common.write
+import com.example.bookcollectionapp.ui.theme.BlueDark
+import com.example.bookcollectionapp.ui.theme.Pink
 import kotlinx.coroutines.flow.collectLatest
 import java.io.File
 import java.util.UUID
@@ -51,6 +54,9 @@ fun AddEditBookScreen(
     val publisherState = viewModel.bookPublisher.value
     val genreState = viewModel.bookGenre.value
     val imagePathState = viewModel.bookImagePath.value
+    val languageState = viewModel.bookLanguage.value
+    val readingStatusState = viewModel.bookReadingStatus.value
+    val ratingState = viewModel.bookRating.value
 
     val context = LocalContext.current
     val dirPath = context.filesDir.path
@@ -82,14 +88,38 @@ fun AddEditBookScreen(
         viewModel.onEvent(AddEditBookEvent.PickedImage(filePath))
     }
 
-    val icon = if (genreState.isExpanded) {
+    val iconGenre = if (genreState.isExpanded) {
         Icons.Default.KeyboardArrowUp
     }
     else {
         Icons.Default.KeyboardArrowDown
     }
 
-    val list = getAllGenresAsStrings()
+    val iconLanguage = if (languageState.isExpanded) {
+        Icons.Default.KeyboardArrowUp
+    }
+    else {
+        Icons.Default.KeyboardArrowDown
+    }
+
+    val iconReadingStatus = if (readingStatusState.isExpanded) {
+        Icons.Default.KeyboardArrowUp
+    }
+    else {
+        Icons.Default.KeyboardArrowDown
+    }
+
+    val iconRating = if (ratingState.isExpanded) {
+        Icons.Default.KeyboardArrowUp
+    }
+    else {
+        Icons.Default.KeyboardArrowDown
+    }
+
+    val genreList = getAllGenresAsStrings()
+    val languageList = listOf("Polish","English")
+    val readingStatusList = listOf("Reading","Completed")
+    val ratingList = listOf("1","2","3","4","5")
 
     val scaffoldState = rememberScaffoldState()
 
@@ -118,7 +148,11 @@ fun AddEditBookScreen(
                     viewModel.onEvent(AddEditBookEvent.SaveBook)
                 },
             ) {
-                Icon(imageVector = Icons.Default.Add, contentDescription = "Add book")
+                Icon(
+                    imageVector = Icons.Default.Add,
+                    contentDescription = "Add book",
+                    tint = Color.White
+                )
             }
         },
         scaffoldState = scaffoldState
@@ -128,42 +162,50 @@ fun AddEditBookScreen(
                 .fillMaxSize()
                 .padding(10.dp),
             horizontalAlignment = Alignment.CenterHorizontally,
-            verticalArrangement = Arrangement.Center
         ) {
-                if (imagePathState.isCoverChanged){
-                    Log.i("TAG12","if   " + imagePathState.imagePath)
-                    AsyncImage(
-                        model = ImageRequest.Builder(LocalContext.current)
-                            .data(filePath)
-                            .build(),
-                        contentDescription = "Selected image",
-                        contentScale = ContentScale.Crop,
-                        fallback = painterResource(R.drawable.ic_camera),
-                        error = painterResource(R.drawable.ic_camera),
-                        modifier = Modifier
-                            .size(170.dp, 250.dp)
-                            .clickable {
-                                galleryLauncher.launch("image/*")
-                            }
-                    )
+            Card(
+                modifier = Modifier
+                    .size(150.dp, 200.dp)
+                    .padding(5.dp),
+                border = BorderStroke(2.dp,Pink)
+            ) {
+                Box(
+                    contentAlignment = Alignment.Center
+                ){
+                    if (imagePathState.isCoverChanged) {
+                        AsyncImage(
+                            model = ImageRequest
+                                .Builder(LocalContext.current)
+                                .data(filePath)
+                                .build(),
+                            contentDescription = "Selected image",
+                            contentScale = ContentScale.Crop,
+                            fallback = painterResource(R.drawable.ic_camera),
+                            error = painterResource(R.drawable.ic_camera),
+                            modifier = Modifier
+                                .clickable {
+                                    galleryLauncher.launch("image/*")
+                                }
+                        )
+                    }
+                    else {
+                        AsyncImage(
+                            model = ImageRequest
+                                .Builder(LocalContext.current)
+                                .data(imagePathState.imagePath)
+                                .build(),
+                            contentDescription = "Selected image",
+                            contentScale = ContentScale.Crop,
+                            fallback = painterResource(R.drawable.ic_camera),
+                            error = painterResource(R.drawable.ic_camera),
+                            modifier = Modifier
+                                .clickable {
+                                    galleryLauncher.launch("image/*")
+                                }
+                        )
+                    }
                 }
-                else {
-                    Log.i("TAG12","else   " + imagePathState.imagePath)
-                    AsyncImage(
-                        model = ImageRequest.Builder(LocalContext.current)
-                            .data(imagePathState.imagePath)
-                            .build(),
-                        contentDescription = "Selected image",
-                        contentScale = ContentScale.Crop,
-                        fallback = painterResource(R.drawable.ic_camera),
-                        error = painterResource(R.drawable.ic_camera),
-                        modifier = Modifier
-                            .size(170.dp, 250.dp)
-                            .clickable {
-                                galleryLauncher.launch("image/*")
-                            }
-                    )
-                }
+            }
 
             Row(
                 modifier = Modifier
@@ -171,17 +213,27 @@ fun AddEditBookScreen(
                 horizontalArrangement = Arrangement.SpaceEvenly
             ) {
                 OutlinedButton(
+                    colors = ButtonDefaults.outlinedButtonColors(BlueDark),
                     onClick = {
                         galleryLauncher.launch("image/*")
-                    }) {
-                    Text(text = "Choose Image")
+                    }
+                ) {
+                    Text(
+                        text = "Choose Image",
+                        color = Color.White
+                    )
                 }
 
                 OutlinedButton(
+                    colors = ButtonDefaults.outlinedButtonColors(BlueDark),
                     onClick = {
                         cameraLauncher.launch()
-                    }) {
-                    Text(text = "Take a picture")
+                    }
+                ) {
+                    Text(
+                        text = "Take a picture",
+                        color = Color.White
+                    )
                 }
             }
 
@@ -192,10 +244,6 @@ fun AddEditBookScreen(
                 placeholder = { Text(titleState.hint) },
                 singleLine = true,
                 modifier = Modifier.fillMaxWidth()
-//                modifier = Modifier.hint
-//                    .onFocusChanged {
-//                    viewModel.onEvent(AddEditBookEvent.ChangeTitleFocus(it))
-//                }
             )
 
             OutlinedTextField(
@@ -207,6 +255,228 @@ fun AddEditBookScreen(
                 modifier = Modifier.fillMaxWidth()
             )
 
+            Row(
+            ) {
+                Column(
+                    modifier = Modifier.weight(1f)
+                ) {
+                    OutlinedTextField(
+                        value = genreState.selectedOption,
+                        onValueChange = { viewModel.onEvent(AddEditBookEvent.ChosenGenre(it)) },
+                        label = {
+                            Text(text = "Genre")
+                        },
+                        maxLines = 1,
+                        trailingIcon = {
+                            Icon(
+                                imageVector = iconGenre,
+                                contentDescription = "Genre",
+                                modifier = Modifier
+                                    .clickable {
+                                        viewModel.onEvent(AddEditBookEvent.GenreDropdownMenuStateChanged(!genreState.isExpanded))
+                                    }
+                            )
+                        },
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .onGloballyPositioned { coordinates ->
+                                viewModel.onEvent(
+                                    AddEditBookEvent.SizeOfGenreTextFieldChanged(
+                                        coordinates.size.toSize()
+                                    )
+                                )
+                            },
+                        readOnly = true
+                    )
+
+                    DropdownMenu(
+                        expanded = genreState.isExpanded,
+                        onDismissRequest = { viewModel.onEvent(AddEditBookEvent.GenreDropdownMenuStateChanged(false)) },
+                        modifier = Modifier
+                            .width(with(LocalDensity.current){
+                                genreState.textFieldSize.width.toDp()
+                            })
+                    ) {
+                        genreList.forEach { option ->
+                            DropdownMenuItem(
+                                onClick = {
+                                    viewModel.onEvent(AddEditBookEvent.ChosenGenre(option))
+                                    viewModel.onEvent(AddEditBookEvent.GenreDropdownMenuStateChanged(false))
+                                }
+                            ) {
+                                Text(text = option)
+                            }
+                        }
+                    }
+                }
+
+                Spacer(modifier = Modifier.width(10.dp))
+
+                Column(
+                    modifier = Modifier.weight(1f)
+                ) {
+                    OutlinedTextField(
+                        value = languageState.selectedOption,
+                        onValueChange = { viewModel.onEvent(AddEditBookEvent.ChosenLanguage(it)) },
+                        label = {
+                            Text(text = "Language")
+                        },
+                        maxLines = 1,
+                        trailingIcon = {
+                            Icon(
+                                imageVector = iconLanguage,
+                                contentDescription = "Language",
+                                modifier = Modifier
+                                    .clickable {
+                                        viewModel.onEvent(AddEditBookEvent.LanguageDropdownMenuStateChanged(!languageState.isExpanded))
+                                    }
+                            )
+                        },
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .onGloballyPositioned { coordinates ->
+                                viewModel.onEvent(
+                                    AddEditBookEvent.SizeOfLanguageTextFieldChanged(
+                                        coordinates.size.toSize()
+                                    )
+                                )
+                            },
+                        readOnly = true
+                    )
+
+                    DropdownMenu(
+                        expanded = languageState.isExpanded,
+                        onDismissRequest = { viewModel.onEvent(AddEditBookEvent.LanguageDropdownMenuStateChanged(false)) },
+                        modifier = Modifier
+                            .width(with(LocalDensity.current){
+                                languageState.textFieldSize.width.toDp()
+                            })
+                    ) {
+                        languageList.forEach { option ->
+                            DropdownMenuItem(
+                                onClick = {
+                                    viewModel.onEvent(AddEditBookEvent.ChosenLanguage(option))
+                                    viewModel.onEvent(AddEditBookEvent.LanguageDropdownMenuStateChanged(false))
+                                }
+                            ) {
+                                Text(text = option)
+                            }
+                        }
+                    }
+                }
+            }
+
+            Row(
+            ) {
+                Column(
+                    modifier = Modifier.weight(1f)
+                ) {
+                    OutlinedTextField(
+                        value = readingStatusState.selectedOption,
+                        onValueChange = { viewModel.onEvent(AddEditBookEvent.ChosenReadingStatus(it)) },
+                        label = {
+                            Text(text = "Status")
+                        },
+                        maxLines = 1,
+                        trailingIcon = {
+                            Icon(
+                                imageVector = iconReadingStatus,
+                                contentDescription = "Status",
+                                modifier = Modifier
+                                    .clickable {
+                                        viewModel.onEvent(AddEditBookEvent.ReadingStatusDropdownMenuStateChanged(!readingStatusState.isExpanded))
+                                    }
+                            )
+                        },
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .onGloballyPositioned { coordinates ->
+                                viewModel.onEvent(
+                                    AddEditBookEvent.SizeOfReadingStatusTextFieldChanged(
+                                        coordinates.size.toSize()
+                                    )
+                                )
+                            },
+                        readOnly = true
+                    )
+
+                    DropdownMenu(
+                        expanded = readingStatusState.isExpanded,
+                        onDismissRequest = { viewModel.onEvent(AddEditBookEvent.ReadingStatusDropdownMenuStateChanged(false)) },
+                        modifier = Modifier
+                            .width(with(LocalDensity.current){
+                                readingStatusState.textFieldSize.width.toDp()
+                            })
+                    ) {
+                        readingStatusList.forEach { option ->
+                            DropdownMenuItem(
+                                onClick = {
+                                    viewModel.onEvent(AddEditBookEvent.ChosenReadingStatus(option))
+                                    viewModel.onEvent(AddEditBookEvent.ReadingStatusDropdownMenuStateChanged(false))
+                                }
+                            ) {
+                                Text(text = option)
+                            }
+                        }
+                    }
+                }
+
+                Spacer(modifier = Modifier.width(10.dp))
+
+                Column(
+                    modifier = Modifier.weight(1f)
+                ) {
+                    OutlinedTextField(
+                        value = ratingState.selectedOption,
+                        onValueChange = { viewModel.onEvent(AddEditBookEvent.ChosenRating(it)) },
+                        label = {
+                            Text(text = "Rating")
+                        },
+                        maxLines = 1,
+                        trailingIcon = {
+                            Icon(
+                                imageVector = iconRating,
+                                contentDescription = "Rating",
+                                modifier = Modifier
+                                    .clickable {
+                                        viewModel.onEvent(AddEditBookEvent.RatingDropdownMenuStateChanged(!ratingState.isExpanded))
+                                    }
+                            )
+                        },
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .onGloballyPositioned { coordinates ->
+                                viewModel.onEvent(
+                                    AddEditBookEvent.SizeOfRatingTextFieldChanged(
+                                        coordinates.size.toSize()
+                                    )
+                                )
+                            },
+                        readOnly = true
+                    )
+
+                    DropdownMenu(
+                        expanded = ratingState.isExpanded,
+                        onDismissRequest = { viewModel.onEvent(AddEditBookEvent.RatingDropdownMenuStateChanged(false)) },
+                        modifier = Modifier
+                            .width(with(LocalDensity.current){
+                                ratingState.textFieldSize.width.toDp()
+                            })
+                    ) {
+                        ratingList.forEach { option ->
+                            DropdownMenuItem(
+                                onClick = {
+                                    viewModel.onEvent(AddEditBookEvent.ChosenRating(option))
+                                    viewModel.onEvent(AddEditBookEvent.RatingDropdownMenuStateChanged(false))
+                                }
+                            ) {
+                                Text(text = option)
+                            }
+                        }
+                    }
+                }
+            }
+
             OutlinedTextField(
                 value = publisherState.text,
                 label = { Text("Publisher") },
@@ -215,53 +485,6 @@ fun AddEditBookScreen(
                 singleLine = true,
                 modifier = Modifier.fillMaxWidth()
             )
-
-            Column(
-            ) {
-                OutlinedTextField(
-                    value = genreState.selectedOption,
-                    onValueChange = {viewModel.onEvent(AddEditBookEvent.ChosenGenre(it))},
-                    label = {
-                        Text(text = "Genre")
-                    },
-                    trailingIcon = {
-                        Icon(
-                            imageVector = icon,
-                            contentDescription = "Genre",
-                            modifier = Modifier
-                                .clickable {
-                                    viewModel.onEvent(AddEditBookEvent.DropdownMenuStateChanged(!genreState.isExpanded))
-                                }
-                        )
-                    },
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .onGloballyPositioned { coordinates ->
-                            viewModel.onEvent(AddEditBookEvent.SizeOfTextFieldChanged(coordinates.size.toSize()))
-                        },
-                    readOnly = true
-                )
-
-                DropdownMenu(
-                    expanded = genreState.isExpanded,
-                    onDismissRequest = { viewModel.onEvent(AddEditBookEvent.DropdownMenuStateChanged(false)) },
-                    modifier = Modifier
-                        .width(with(LocalDensity.current){
-                            genreState.textFieldSize.width.toDp()
-                        })
-                ) {
-                    list.forEach { option ->
-                        DropdownMenuItem(
-                            onClick = {
-                                viewModel.onEvent(AddEditBookEvent.ChosenGenre(option))
-                                viewModel.onEvent(AddEditBookEvent.DropdownMenuStateChanged(false))
-                            }
-                        ) {
-                            Text(text = option)
-                        }
-                    }
-                }
-            }
         }
     }
 }

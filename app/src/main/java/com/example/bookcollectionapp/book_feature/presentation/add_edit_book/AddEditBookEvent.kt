@@ -15,8 +15,20 @@ sealed class AddEditBookEvent {
 //    data class ChangePublisherFocus(val focusState: FocusState): AddEditBookEvent()
 
     data class ChosenGenre(val value: String): AddEditBookEvent()
-    data class DropdownMenuStateChanged(val value: Boolean): AddEditBookEvent()
-    data class SizeOfTextFieldChanged(val value: Size): AddEditBookEvent()
+    data class GenreDropdownMenuStateChanged(val value: Boolean): AddEditBookEvent()
+    data class SizeOfGenreTextFieldChanged(val value: Size): AddEditBookEvent()
+
+    data class ChosenLanguage(val value: String): AddEditBookEvent()
+    data class LanguageDropdownMenuStateChanged(val value: Boolean): AddEditBookEvent()
+    data class SizeOfLanguageTextFieldChanged(val value: Size): AddEditBookEvent()
+
+    data class ChosenReadingStatus(val value: String): AddEditBookEvent()
+    data class ReadingStatusDropdownMenuStateChanged(val value: Boolean): AddEditBookEvent()
+    data class SizeOfReadingStatusTextFieldChanged(val value: Size): AddEditBookEvent()
+
+    data class ChosenRating(val value: String): AddEditBookEvent()
+    data class RatingDropdownMenuStateChanged(val value: Boolean): AddEditBookEvent()
+    data class SizeOfRatingTextFieldChanged(val value: Size): AddEditBookEvent()
 
     data class PickedImage(val value: String): AddEditBookEvent()
     data class PickedNewFileName(val value: String): AddEditBookEvent()

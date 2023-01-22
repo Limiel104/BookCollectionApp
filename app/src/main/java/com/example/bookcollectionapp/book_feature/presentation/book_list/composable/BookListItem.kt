@@ -12,7 +12,6 @@ import androidx.compose.material.icons.filled.Star
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
@@ -22,6 +21,8 @@ import androidx.compose.ui.unit.sp
 import coil.compose.AsyncImage
 import com.example.bookcollectionapp.R
 import com.example.bookcollectionapp.book_feature.domain.model.Book
+import com.example.bookcollectionapp.ui.theme.Red
+import com.example.bookcollectionapp.ui.theme.Yellow
 
 @Composable
 fun BookListItem(
@@ -76,7 +77,12 @@ fun BookListItem(
                 horizontalArrangement = Arrangement.SpaceEvenly,
                 verticalAlignment = Alignment.CenterVertically
             ) {
-                Icon(imageVector = Icons.Default.Star, contentDescription = "Rating", tint = Color(250,212,109))
+                Icon(
+                    imageVector = Icons.Default.Star,
+                    contentDescription = "Rating",
+                    tint = Yellow
+                )
+
                 Text(
                     text = "5",
                     fontWeight = FontWeight.Light,
@@ -85,7 +91,12 @@ fun BookListItem(
                 
                 Spacer(modifier = Modifier.width(20.dp))
                 
-                Icon(imageVector = Icons.Default.DateRange, contentDescription = "Date", tint = Color(220,104,104))
+                Icon(
+                    imageVector = Icons.Default.DateRange,
+                    contentDescription = "Date",
+                    tint = Red
+                )
+
                 Text(
                     text = "2019-03-09",
                     fontWeight = FontWeight.Light,

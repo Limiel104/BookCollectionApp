@@ -1,6 +1,5 @@
 package com.example.bookcollectionapp.book_feature.presentation.book_list.composable
 
-import android.util.Log
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.material.Icon
@@ -23,6 +22,8 @@ import com.example.bookcollectionapp.R
 import com.example.bookcollectionapp.book_feature.domain.model.Book
 import com.example.bookcollectionapp.ui.theme.Red
 import com.example.bookcollectionapp.ui.theme.Yellow
+import java.text.SimpleDateFormat
+import java.util.*
 
 @Composable
 fun BookListItem(
@@ -36,7 +37,7 @@ fun BookListItem(
             .background(MaterialTheme.colors.background),
         verticalAlignment = Alignment.CenterVertically
     ) {
-        Log.i("TAGBookList",book.imagePath)
+        val simpleDate = SimpleDateFormat("yyyy-MM-dd")
 
         AsyncImage(
             model = book.imagePath,
@@ -84,13 +85,13 @@ fun BookListItem(
                 )
 
                 Text(
-                    text = "5",
+                    text = book.rating.toString(),
                     fontWeight = FontWeight.Light,
                     fontSize = 13.sp,
                 )
-                
+
                 Spacer(modifier = Modifier.width(20.dp))
-                
+
                 Icon(
                     imageVector = Icons.Default.DateRange,
                     contentDescription = "Date",
@@ -98,7 +99,7 @@ fun BookListItem(
                 )
 
                 Text(
-                    text = "2019-03-09",
+                    text = simpleDate.format(Date(book.dateAdded)),
                     fontWeight = FontWeight.Light,
                     fontSize = 13.sp,
                 )

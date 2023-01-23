@@ -13,5 +13,8 @@ data class Book(
     val publisher: String,
     val genre: String,
     val imagePath: String,
-    val imageFileName: String
+    val imageFileName: String,
+    val readingStatus: String,
+    val rating: Int,
+    val language: String
 )

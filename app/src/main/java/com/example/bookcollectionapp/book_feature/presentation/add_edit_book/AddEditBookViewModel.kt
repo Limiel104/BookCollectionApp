@@ -81,6 +81,15 @@ class AddEditBookViewModel @Inject constructor(
                             imagePath = book.imagePath,
                             imageFileName = book.imageFileName
                         )
+                        _bookReadingStatus.value = bookReadingStatus.value.copy(
+                            selectedOption = book.readingStatus
+                        )
+                        _bookRating.value = bookRating.value.copy(
+                            selectedOption = book.rating.toString()
+                        )
+                        _bookLanguage.value = bookLanguage.value.copy(
+                            selectedOption = book.language
+                        )
                     }
                 }
             }
@@ -197,7 +206,10 @@ class AddEditBookViewModel @Inject constructor(
                                 publisher = bookPublisher.value.text,
                                 genre = bookGenre.value.selectedOption,
                                 imagePath = bookImagePath.value.imagePath,
-                                imageFileName = bookImagePath.value.imageFileName
+                                imageFileName = bookImagePath.value.imageFileName,
+                                readingStatus = bookReadingStatus.value.selectedOption,
+                                rating = bookRating.value.selectedOption.toInt(),
+                                language = bookLanguage.value.selectedOption
                             )
                         )
                         _eventFlow.emit(UiEvent.SaveBook)

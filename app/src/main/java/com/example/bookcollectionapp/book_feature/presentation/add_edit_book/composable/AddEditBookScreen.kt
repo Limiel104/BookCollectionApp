@@ -38,7 +38,6 @@ import com.example.bookcollectionapp.book_feature.presentation.add_edit_book.UiE
 import com.example.bookcollectionapp.book_feature.presentation.util.Screen
 import com.example.bookcollectionapp.common.write
 import com.example.bookcollectionapp.ui.theme.BlueDark
-import com.example.bookcollectionapp.ui.theme.Pink
 import kotlinx.coroutines.flow.collectLatest
 import java.io.File
 import java.util.UUID
@@ -166,8 +165,9 @@ fun AddEditBookScreen(
             Card(
                 modifier = Modifier
                     .size(150.dp, 200.dp)
+                    .clickable { galleryLauncher.launch("image/*") }
                     .padding(5.dp),
-                border = BorderStroke(2.dp,Pink)
+                border = BorderStroke(0.dp, MaterialTheme.colors.background)
             ) {
                 Box(
                     contentAlignment = Alignment.Center
@@ -182,10 +182,6 @@ fun AddEditBookScreen(
                             contentScale = ContentScale.Crop,
                             fallback = painterResource(R.drawable.ic_camera),
                             error = painterResource(R.drawable.ic_camera),
-                            modifier = Modifier
-                                .clickable {
-                                    galleryLauncher.launch("image/*")
-                                }
                         )
                     }
                     else {

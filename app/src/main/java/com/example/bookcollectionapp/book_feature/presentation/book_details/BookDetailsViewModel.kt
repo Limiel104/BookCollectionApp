@@ -26,11 +26,15 @@ class BookDetailsViewModel @Inject constructor(
                     bookUseCase.getBookUseCase(bookId)?.also { book ->
                         _bookDetails.value = bookDetails.value.copy(
                             id = bookId,
+                            dateAdded = book.dateAdded,
                             title = book.title,
                             author = book.author,
                             publisher = book.publisher,
                             genre = book.genre,
-                            imagePath = book.imagePath
+                            imagePath = book.imagePath,
+                            readingStatus = book.readingStatus,
+                            rating = book.rating,
+                            language = book.language
                         )
                     }
                 }

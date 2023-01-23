@@ -98,6 +98,5 @@ class BookListViewModel @Inject constructor(
                 )
             }.launchIn(viewModelScope)
         }
-
     }
 }

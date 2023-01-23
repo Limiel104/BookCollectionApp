@@ -3,49 +3,49 @@ package com.example.bookcollectionapp.book_feature.domain.util
 enum class Genre(
     val value: String
 ) {
-    ALL("All"),
-    ACTION("Action"),
-    ADVENTURE("Adventure"),
-    COMEDY("Comedy"),
-    FANTASY("Fantasy"),
-    HISTORICAL("Historical Fiction"),
-    HORROR("Horror"),
-    NONFICTION("Nonfiction"),
-    MYSTERY("Mystery"),
-    ROMANCE("Romance"),
-    SCIENCE("Science Fiction"),
-    THRILLER("Thriller")
+    All("All"),
+    Action("Action"),
+    Adventure("Adventure"),
+    Comedy("Comedy"),
+    Fantasy("Fantasy"),
+    Historical("Historical Fiction"),
+    Horror("Horror"),
+    Nonfiction("Nonfiction"),
+    Mystery("Mystery"),
+    Romance("Romance"),
+    Science("Science Fiction"),
+    Thriller("Thriller")
 }
 
 fun getAllGenres(): List<Genre> {
     return listOf(
-        Genre.ALL,
-        Genre.ACTION,
-        Genre.ADVENTURE,
-        Genre.COMEDY,
-        Genre.FANTASY,
-        Genre.HISTORICAL,
-        Genre.HORROR,
-        Genre.NONFICTION,
-        Genre.MYSTERY,
-        Genre.ROMANCE,
-        Genre.SCIENCE,
-        Genre.THRILLER
+        Genre.All,
+        Genre.Action,
+        Genre.Adventure,
+        Genre.Comedy,
+        Genre.Fantasy,
+        Genre.Historical,
+        Genre.Horror,
+        Genre.Nonfiction,
+        Genre.Mystery,
+        Genre.Romance,
+        Genre.Science,
+        Genre.Thriller
     )
 }
 
 fun getAllGenresAsStrings(): List<String> {
     return listOf(
-        Genre.ACTION.value,
-        Genre.ADVENTURE.value,
-        Genre.COMEDY.value,
-        Genre.FANTASY.value,
-        Genre.HISTORICAL.value,
-        Genre.HORROR.value,
-        Genre.NONFICTION.value,
-        Genre.MYSTERY.value,
-        Genre.ROMANCE.value,
-        Genre.SCIENCE.value,
-        Genre.THRILLER.value
+        Genre.Action.value,
+        Genre.Adventure.value,
+        Genre.Comedy.value,
+        Genre.Fantasy.value,
+        Genre.Historical.value,
+        Genre.Horror.value,
+        Genre.Nonfiction.value,
+        Genre.Mystery.value,
+        Genre.Romance.value,
+        Genre.Science.value,
+        Genre.Thriller.value
     )
 }

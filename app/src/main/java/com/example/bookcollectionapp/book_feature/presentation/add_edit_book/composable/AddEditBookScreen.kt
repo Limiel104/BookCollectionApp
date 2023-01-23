@@ -32,6 +32,9 @@ import coil.compose.AsyncImage
 import coil.request.ImageRequest
 import com.example.bookcollectionapp.R
 import com.example.bookcollectionapp.book_feature.domain.util.getAllGenresAsStrings
+import com.example.bookcollectionapp.book_feature.domain.util.getAllLanguages
+import com.example.bookcollectionapp.book_feature.domain.util.getAllRatings
+import com.example.bookcollectionapp.book_feature.domain.util.getAllReadingStatuses
 import com.example.bookcollectionapp.book_feature.presentation.add_edit_book.AddEditBookEvent
 import com.example.bookcollectionapp.book_feature.presentation.add_edit_book.AddEditBookViewModel
 import com.example.bookcollectionapp.book_feature.presentation.add_edit_book.UiEvent
@@ -116,9 +119,9 @@ fun AddEditBookScreen(
     }
 
     val genreList = getAllGenresAsStrings()
-    val languageList = listOf("Polish","English")
-    val readingStatusList = listOf("Reading","Completed")
-    val ratingList = listOf("1","2","3","4","5")
+    val languageList = getAllLanguages()
+    val readingStatusList = getAllReadingStatuses()
+    val ratingList = getAllRatings()
 
     val scaffoldState = rememberScaffoldState()
 
@@ -237,7 +240,7 @@ fun AddEditBookScreen(
                 value = titleState.text,
                 label = { Text("Title") },
                 onValueChange = { viewModel.onEvent(AddEditBookEvent.EnteredTitle(it)) },
-                placeholder = { Text(titleState.hint) },
+                placeholder = { Text("Title") },
                 singleLine = true,
                 modifier = Modifier.fillMaxWidth()
             )
@@ -246,7 +249,7 @@ fun AddEditBookScreen(
                 value = authorState.text,
                 label = { Text("Author") },
                 onValueChange = { viewModel.onEvent(AddEditBookEvent.EnteredAuthor(it)) },
-                placeholder = { Text(authorState.hint) },
+                placeholder = { Text("Author") },
                 singleLine = true,
                 modifier = Modifier.fillMaxWidth()
             )
@@ -477,7 +480,7 @@ fun AddEditBookScreen(
                 value = publisherState.text,
                 label = { Text("Publisher") },
                 onValueChange = { viewModel.onEvent(AddEditBookEvent.EnteredPublisher(it)) },
-                placeholder = { Text(publisherState.hint) },
+                placeholder = { Text("Publisher") },
                 singleLine = true,
                 modifier = Modifier.fillMaxWidth()
             )

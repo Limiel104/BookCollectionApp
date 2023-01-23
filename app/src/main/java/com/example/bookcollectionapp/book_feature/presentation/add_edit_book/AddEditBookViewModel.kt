@@ -1,6 +1,5 @@
 package com.example.bookcollectionapp.book_feature.presentation.add_edit_book
 
-import android.util.Log
 import androidx.compose.runtime.State
 import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.SavedStateHandle
@@ -23,14 +22,10 @@ class AddEditBookViewModel @Inject constructor(
     private var bookToEditId: Int? = null
     private var dateAdded: Long? = null
 
-    private val _bookTitle = mutableStateOf(BookTextFieldState(
-        hint = "Title"
-    ))
+    private val _bookTitle = mutableStateOf(BookTextFieldState())
     val bookTitle: State<BookTextFieldState> = _bookTitle
 
-    private val _bookAuthor = mutableStateOf(BookTextFieldState(
-        hint = "Author"
-    ))
+    private val _bookAuthor = mutableStateOf(BookTextFieldState())
     val bookAuthor: State<BookTextFieldState> = _bookAuthor
 
     private val _bookPublisher = mutableStateOf(BookTextFieldState())
@@ -61,18 +56,14 @@ class AddEditBookViewModel @Inject constructor(
                     bookUseCases.getBookUseCase(bookId)?.also { book ->
                         bookToEditId = book.id
                         dateAdded = book.dateAdded
-                        Log.i("TAG","data:   " + dateAdded.toString())
                         _bookTitle.value = bookTitle.value.copy(
                             text = book.title,
-                            isHintVisible = false
                         )
                         _bookAuthor.value = bookAuthor.value.copy(
                             text = book.author,
-                            isHintVisible = false
                         )
                         _bookPublisher.value = bookPublisher.value.copy(
                             text = book.publisher,
-//                            isHintVisible = false
                         )
                         _bookGenre.value = bookGenre.value.copy(
                             selectedOption = book.genre
@@ -103,19 +94,9 @@ class AddEditBookViewModel @Inject constructor(
                     text = event.value
                 )
             }
-            is AddEditBookEvent.ChangeTitleFocus -> {
-                _bookTitle.value = bookTitle.value.copy(
-                    isHintVisible = !event.focusState.isFocused && bookTitle.value.text.isBlank()
-                )
-            }
             is AddEditBookEvent.EnteredAuthor -> {
                 _bookAuthor.value = bookAuthor.value.copy(
                     text = event.value
-                )
-            }
-            is AddEditBookEvent.ChangeAuthorFocus -> {
-                _bookAuthor.value = bookAuthor.value.copy(
-                    isHintVisible = !event.focusState.isFocused && bookAuthor.value.text.isBlank()
                 )
             }
             is AddEditBookEvent.EnteredPublisher -> {

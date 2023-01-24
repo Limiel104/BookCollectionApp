@@ -1,5 +1,6 @@
 package com.example.bookcollectionapp.book_feature.presentation.book_details.composable
 
+import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.layout.*
 import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
@@ -7,7 +8,6 @@ import androidx.compose.material.icons.filled.Edit
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
@@ -57,7 +57,7 @@ fun BookDetailsScreen(
                 Icon(
                     imageVector = Icons.Default.Edit,
                     contentDescription = "Edit book",
-                    tint = Color.White
+                    tint = MaterialTheme.colors.onPrimary
                 )
             }
         },
@@ -73,18 +73,26 @@ fun BookDetailsScreen(
         ) {
             Row(
             ) {
-                AsyncImage(
-                    model = ImageRequest
-                        .Builder(LocalContext.current)
-                        .data(imagePath)
-                        .build(),
-                    contentDescription = "Selected image",
-                    contentScale = ContentScale.Crop,
-                    fallback = painterResource(R.drawable.ic_camera),
-                    error = painterResource(R.drawable.ic_camera),
+                Card(
                     modifier = Modifier
-                        .size(120.dp, 160.dp)
-                )
+                        .size(120.dp, 160.dp),
+                    border = BorderStroke(0.dp, MaterialTheme.colors.background)
+                ){
+                    Box(
+                        contentAlignment = Alignment.Center
+                    ){
+                        AsyncImage(
+                            model = ImageRequest
+                                .Builder(LocalContext.current)
+                                .data(imagePath)
+                                .build(),
+                            contentDescription = "Selected image",
+                            contentScale = ContentScale.Crop,
+                            fallback = painterResource(R.drawable.ic_camera),
+                            error = painterResource(R.drawable.ic_camera),
+                        )
+                    }
+                }
 
                 Column(
                     modifier = Modifier

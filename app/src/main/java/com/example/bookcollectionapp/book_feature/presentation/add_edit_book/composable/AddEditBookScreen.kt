@@ -18,7 +18,6 @@ import androidx.compose.material.icons.filled.KeyboardArrowUp
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.layout.onGloballyPositioned
 import androidx.compose.ui.platform.LocalContext
@@ -40,7 +39,6 @@ import com.example.bookcollectionapp.book_feature.presentation.add_edit_book.Add
 import com.example.bookcollectionapp.book_feature.presentation.add_edit_book.UiEvent
 import com.example.bookcollectionapp.book_feature.presentation.util.Screen
 import com.example.bookcollectionapp.common.write
-import com.example.bookcollectionapp.ui.theme.BlueDark
 import kotlinx.coroutines.flow.collectLatest
 import java.io.File
 import java.util.UUID
@@ -153,7 +151,7 @@ fun AddEditBookScreen(
                 Icon(
                     imageVector = Icons.Default.Add,
                     contentDescription = "Add book",
-                    tint = Color.White
+                    tint = MaterialTheme.colors.onPrimary
                 )
             }
         },
@@ -197,10 +195,6 @@ fun AddEditBookScreen(
                             contentScale = ContentScale.Crop,
                             fallback = painterResource(R.drawable.ic_camera),
                             error = painterResource(R.drawable.ic_camera),
-                            modifier = Modifier
-                                .clickable {
-                                    galleryLauncher.launch("image/*")
-                                }
                         )
                     }
                 }
@@ -212,26 +206,26 @@ fun AddEditBookScreen(
                 horizontalArrangement = Arrangement.SpaceEvenly
             ) {
                 OutlinedButton(
-                    colors = ButtonDefaults.outlinedButtonColors(BlueDark),
+                    colors = ButtonDefaults.outlinedButtonColors(MaterialTheme.colors.primaryVariant),
                     onClick = {
                         galleryLauncher.launch("image/*")
                     }
                 ) {
                     Text(
                         text = "Choose Image",
-                        color = Color.White
+                        color = MaterialTheme.colors.onPrimary
                     )
                 }
 
                 OutlinedButton(
-                    colors = ButtonDefaults.outlinedButtonColors(BlueDark),
+                    colors = ButtonDefaults.outlinedButtonColors(MaterialTheme.colors.primaryVariant),
                     onClick = {
                         cameraLauncher.launch()
                     }
                 ) {
                     Text(
                         text = "Take a picture",
-                        color = Color.White
+                        color = MaterialTheme.colors.onPrimary
                     )
                 }
             }

@@ -30,7 +30,6 @@ import com.example.bookcollectionapp.book_feature.domain.util.getAllGenres
 import com.example.bookcollectionapp.book_feature.presentation.book_list.BookListEvent
 import com.example.bookcollectionapp.book_feature.presentation.book_list.BookListViewModel
 import com.example.bookcollectionapp.book_feature.presentation.util.Screen
-import com.example.bookcollectionapp.ui.theme.Pink
 import kotlinx.coroutines.launch
 
 @OptIn(ExperimentalMaterialApi::class)
@@ -53,7 +52,7 @@ fun BookListScreen(
             ) {
                 Icon(
                     imageVector = Icons.Default.Add,
-                    tint = Color.White,
+                    tint = MaterialTheme.colors.onPrimary,
                     contentDescription = "Add book")
             }
         },
@@ -178,7 +177,7 @@ fun BookListScreen(
                         background = {
                             val color = when(dismissState.dismissDirection) {
                                 DismissDirection.StartToEnd -> Color.Transparent
-                                DismissDirection.EndToStart -> Pink
+                                DismissDirection.EndToStart -> MaterialTheme.colors.onSecondary
                                 null -> Color.Transparent
                             }
 
@@ -191,7 +190,7 @@ fun BookListScreen(
                                 Icon(
                                     imageVector = Icons.Default.Delete,
                                     contentDescription = "Delete book",
-                                    tint = Color.White,
+                                    tint = MaterialTheme.colors.onPrimary,
                                     modifier = Modifier.align(Alignment.CenterEnd)
                                 )
                             }

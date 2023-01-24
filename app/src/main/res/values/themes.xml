@@ -2,6 +2,6 @@
 <resources>
 
     <style name="Theme.BookCollectionApp" parent="android:Theme.Material.Light.NoActionBar">
-        <item name="android:statusBarColor">#78beff</item>
+        <item name="android:statusBarColor">#372046</item>
     </style>
 </resources>

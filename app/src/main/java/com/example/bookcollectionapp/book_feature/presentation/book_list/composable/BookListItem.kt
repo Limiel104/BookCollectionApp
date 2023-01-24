@@ -1,7 +1,9 @@
 package com.example.bookcollectionapp.book_feature.presentation.book_list.composable
 
+import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
+import androidx.compose.material.Card
 import androidx.compose.material.Icon
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Text
@@ -12,12 +14,14 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import coil.compose.AsyncImage
+import coil.request.ImageRequest
 import com.example.bookcollectionapp.R
 import com.example.bookcollectionapp.book_feature.domain.model.Book
 import com.example.bookcollectionapp.ui.theme.Red
@@ -39,14 +43,26 @@ fun BookListItem(
     ) {
         val simpleDate = SimpleDateFormat("yyyy-MM-dd")
 
-        AsyncImage(
-            model = book.imagePath,
-            contentDescription = "Book cover",
-            contentScale = ContentScale.Crop,
-            fallback = painterResource(R.drawable.ic_camera),
+        Card(
             modifier = Modifier
-                .size(90.dp, 120.dp)
-        )
+                .size(90.dp, 120.dp),
+            border = BorderStroke(0.dp, MaterialTheme.colors.background)
+        ){
+            Box(
+                contentAlignment = Alignment.Center
+            ){
+                AsyncImage(
+                    model = ImageRequest
+                        .Builder(LocalContext.current)
+                        .data(book.imagePath)
+                        .build(),
+                    contentDescription = "Book cover",
+                    contentScale = ContentScale.Crop,
+                    fallback = painterResource(R.drawable.ic_camera),
+                    error = painterResource(R.drawable.ic_camera),
+                )
+            }
+        }
 
         Column(
             modifier = Modifier

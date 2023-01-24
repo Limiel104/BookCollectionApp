@@ -4,6 +4,7 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.material.MaterialTheme
 import androidx.compose.material.RadioButton
 import androidx.compose.material.RadioButtonDefaults
 import androidx.compose.material.Text
@@ -13,8 +14,6 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import com.example.bookcollectionapp.ui.theme.GrayLight
-import com.example.bookcollectionapp.ui.theme.Pink
 
 @Composable
 fun SortSectionItem(
@@ -31,8 +30,8 @@ fun SortSectionItem(
             onClick = onClick,
             modifier = Modifier.size(25.dp),
             colors = RadioButtonDefaults.colors(
-                selectedColor = Pink,
-                unselectedColor = GrayLight
+                selectedColor = MaterialTheme.colors.secondary,
+                unselectedColor = MaterialTheme.colors.onSecondary
             ),
         )
 

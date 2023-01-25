@@ -22,14 +22,8 @@ class AddEditBookViewModel @Inject constructor(
     private var bookToEditId: Int? = null
     private var dateAdded: Long? = null
 
-    private val _bookTitle = mutableStateOf(BookTextFieldState())
-    val bookTitle: State<BookTextFieldState> = _bookTitle
-
-    private val _bookAuthor = mutableStateOf(BookTextFieldState())
-    val bookAuthor: State<BookTextFieldState> = _bookAuthor
-
-    private val _bookPublisher = mutableStateOf(BookTextFieldState())
-    val bookPublisher: State<BookTextFieldState> = _bookPublisher
+    private val _bookTextFields = mutableStateOf(BookTextFieldsState())
+    val bookTextFieldsState: State<BookTextFieldsState> = _bookTextFields
 
     private val _bookGenre = mutableStateOf(DropdownMenuState())
     val bookGenre: State<DropdownMenuState> = _bookGenre
@@ -46,6 +40,9 @@ class AddEditBookViewModel @Inject constructor(
     private val _bookRating = mutableStateOf(DropdownMenuState())
     val bookRating: State<DropdownMenuState> = _bookRating
 
+    private val _bookValidationErrorsState = mutableStateOf(ValidationErrorsState())
+    val bookValidationErrorsState: State<ValidationErrorsState> = _bookValidationErrorsState
+
     private val _eventFlow = MutableSharedFlow<UiEvent>()
     val eventFlow = _eventFlow.asSharedFlow()
 
@@ -56,14 +53,10 @@ class AddEditBookViewModel @Inject constructor(
                     bookUseCases.getBookUseCase(bookId)?.also { book ->
                         bookToEditId = book.id
                         dateAdded = book.dateAdded
-                        _bookTitle.value = bookTitle.value.copy(
-                            text = book.title,
-                        )
-                        _bookAuthor.value = bookAuthor.value.copy(
-                            text = book.author,
-                        )
-                        _bookPublisher.value = bookPublisher.value.copy(
-                            text = book.publisher,
+                        _bookTextFields.value = bookTextFieldsState.value.copy(
+                            title = book.title,
+                            author = book.author,
+                            publisher = book.publisher
                         )
                         _bookGenre.value = bookGenre.value.copy(
                             selectedOption = book.genre
@@ -90,18 +83,18 @@ class AddEditBookViewModel @Inject constructor(
     fun onEvent(event: AddEditBookEvent) {
         when(event) {
             is AddEditBookEvent.EnteredTitle -> {
-                _bookTitle.value = bookTitle.value.copy(
-                    text = event.value
+                _bookTextFields.value = bookTextFieldsState.value.copy(
+                    title= event.value
                 )
             }
             is AddEditBookEvent.EnteredAuthor -> {
-                _bookAuthor.value = bookAuthor.value.copy(
-                    text = event.value
+                _bookTextFields.value = bookTextFieldsState.value.copy(
+                    author = event.value
                 )
             }
             is AddEditBookEvent.EnteredPublisher -> {
-                _bookPublisher.value = bookPublisher.value.copy(
-                    text = event.value
+                _bookTextFields.value = bookTextFieldsState.value.copy(
+                    publisher = event.value
                 )
             }
             is AddEditBookEvent.ChosenGenre -> {
@@ -176,33 +169,78 @@ class AddEditBookViewModel @Inject constructor(
                 )
             }
             is AddEditBookEvent.SaveBook -> {
-                viewModelScope.launch {
-                    try {
-                        bookUseCases.addBookUseCase(
-                            Book(
-                                id = bookToEditId,
-                                dateAdded = System.currentTimeMillis(),
-                                title = bookTitle.value.text,
-                                author = bookAuthor.value.text,
-                                publisher = bookPublisher.value.text,
-                                genre = bookGenre.value.selectedOption,
-                                imagePath = bookImagePath.value.imagePath,
-                                imageFileName = bookImagePath.value.imageFileName,
-                                readingStatus = bookReadingStatus.value.selectedOption,
-                                rating = bookRating.value.selectedOption.toInt(),
-                                language = bookLanguage.value.selectedOption
+                if (isValidationSuccessful()) {
+                    viewModelScope.launch {
+                        try {
+                            bookUseCases.addBookUseCase(
+                                Book(
+                                    id = bookToEditId,
+                                    dateAdded = System.currentTimeMillis(),
+                                    title = bookTextFieldsState.value.title,
+                                    author = bookTextFieldsState.value.author,
+                                    publisher = bookTextFieldsState.value.publisher,
+                                    genre = bookGenre.value.selectedOption,
+                                    imagePath = bookImagePath.value.imagePath,
+                                    imageFileName = bookImagePath.value.imageFileName,
+                                    readingStatus = bookReadingStatus.value.selectedOption,
+                                    rating = bookRating.value.selectedOption.toInt(),
+                                    language = bookLanguage.value.selectedOption
+                                )
                             )
-                        )
-                        _eventFlow.emit(UiEvent.SaveBook)
-                    } catch (e: Exception) {
+                            _eventFlow.emit(UiEvent.SaveBook)
+                        } catch (e: Exception) {
+                            _eventFlow.emit(
+                                UiEvent.ShowSnackbar(
+                                    message = e.message ?: "Error occurred - couldn't save book"
+                                )
+                            )
+                        }
+                    }
+                }
+                else {
+                    viewModelScope.launch {
                         _eventFlow.emit(
                             UiEvent.ShowSnackbar(
-                                message = e.message ?: "Error occurred - couldn't save book"
+                                message = "All fields need to be filled"
                             )
                         )
                     }
                 }
             }
         }
+    }
+
+    private fun isValidationSuccessful(): Boolean {
+        val titleResult = bookUseCases.validateFieldInputUseCase.invoke("Title",bookTextFieldsState.value.title)
+        val authorResult = bookUseCases.validateFieldInputUseCase.invoke("Author",bookTextFieldsState.value.author)
+        val publisherResult = bookUseCases.validateFieldInputUseCase.invoke("Publisher",bookTextFieldsState.value.publisher)
+        val genreResult = bookUseCases.validateFieldInputUseCase.invoke("Genre",bookGenre.value.selectedOption)
+        val readingStatusResult = bookUseCases.validateFieldInputUseCase.invoke("Status",bookReadingStatus.value.selectedOption)
+        val ratingResult = bookUseCases.validateFieldInputUseCase.invoke("Rating",bookRating.value.selectedOption)
+        val languageResult = bookUseCases.validateFieldInputUseCase.invoke("Language",bookLanguage.value.selectedOption)
+
+        val hasError = listOf(
+            titleResult,
+            authorResult,
+            publisherResult,
+            genreResult,
+            readingStatusResult,
+            ratingResult,
+            languageResult
+        ).any { !it.successful }
+
+        if(hasError) {
+            _bookValidationErrorsState.value = bookValidationErrorsState.value.copy(
+                titleError = titleResult.errorMessage,
+                authorError = authorResult.errorMessage,
+                publisherError = publisherResult.errorMessage,
+                genreError = genreResult.errorMessage,
+                readingStatusError = readingStatusResult.errorMessage,
+                ratingError = ratingResult.errorMessage,
+                languageError = languageResult.errorMessage
+            )
+            return false
+        }
+        return true
     }
 }

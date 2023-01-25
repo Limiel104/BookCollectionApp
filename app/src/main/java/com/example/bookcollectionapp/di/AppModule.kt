@@ -39,7 +39,8 @@ object AppModule {
             getBooksUseCase = GetBooksUseCase(repository),
             deleteBookUseCase = DeleteBookUseCase(repository),
             addBookUseCase = AddBookUseCase(repository),
-            getBookUseCase = GetBookUseCase(repository)
+            getBookUseCase = GetBookUseCase(repository),
+            validateFieldInputUseCase = ValidateFieldInputUseCase()
         )
     }
 }

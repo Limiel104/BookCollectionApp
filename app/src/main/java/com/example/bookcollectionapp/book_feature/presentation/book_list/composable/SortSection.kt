@@ -9,11 +9,12 @@ import com.example.bookcollectionapp.book_feature.domain.util.BookOrder
 
 @Composable
 fun SortSection(
+    modifier: Modifier,
     bookOrder: BookOrder = BookOrder.TitleAscending(),
     onOrderChange: (BookOrder) -> Unit
 ) {
     Row(
-        modifier = Modifier
+        modifier = modifier
             .fillMaxWidth(),
         horizontalArrangement = Arrangement.SpaceEvenly,
         verticalAlignment = Alignment.CenterVertically

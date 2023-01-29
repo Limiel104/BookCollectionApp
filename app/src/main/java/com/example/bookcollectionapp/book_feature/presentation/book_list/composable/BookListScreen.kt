@@ -19,6 +19,7 @@ import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.unit.dp
@@ -30,6 +31,7 @@ import com.example.bookcollectionapp.book_feature.domain.util.getAllGenres
 import com.example.bookcollectionapp.book_feature.presentation.book_list.BookListEvent
 import com.example.bookcollectionapp.book_feature.presentation.book_list.BookListViewModel
 import com.example.bookcollectionapp.book_feature.presentation.util.Screen
+import com.example.bookcollectionapp.common.TestTags
 import kotlinx.coroutines.launch
 
 @OptIn(ExperimentalMaterialApi::class)
@@ -78,6 +80,7 @@ fun BookListScreen(
                         viewModel.onEvent(BookListEvent.OnSearchQueryChange(query))
                     },
                     modifier = Modifier
+                        .testTag(TestTags.SEARCH_FIELD)
                         .weight(1f)
                         .height(50.dp)
                         .background(MaterialTheme.colors.background),
@@ -98,7 +101,7 @@ fun BookListScreen(
                         ) {
                             Icon(
                                 painter = painterResource(id = R.drawable.ic_sort),
-                                contentDescription = "cod")
+                                contentDescription = "Sort")
                         }
                     },
                     leadingIcon = {
@@ -116,6 +119,8 @@ fun BookListScreen(
                 exit = fadeOut() + slideOutVertically()
             ) {
                 SortSection(
+                    modifier = Modifier
+                        .testTag(TestTags.SORT_SECTION),
                     bookOrder = state.bookOrder,
                     onOrderChange = {
                         viewModel.onEvent(BookListEvent.Order(it))
@@ -127,6 +132,7 @@ fun BookListScreen(
 
             Row(
                 modifier = Modifier
+                    .testTag(TestTags.FILTER_SECTION)
                     .horizontalScroll(
                         state = scrollState
                     )

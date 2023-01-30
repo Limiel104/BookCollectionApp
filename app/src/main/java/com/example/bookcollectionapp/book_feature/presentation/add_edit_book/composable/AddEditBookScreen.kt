@@ -24,6 +24,7 @@ import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.layout.onGloballyPositioned
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalDensity
+import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.toSize
@@ -40,6 +41,7 @@ import com.example.bookcollectionapp.book_feature.presentation.add_edit_book.Add
 import com.example.bookcollectionapp.book_feature.presentation.add_edit_book.AddEditBookViewModel
 import com.example.bookcollectionapp.book_feature.presentation.add_edit_book.UiEvent
 import com.example.bookcollectionapp.book_feature.presentation.util.Screen
+import com.example.bookcollectionapp.common.TestTags
 import com.example.bookcollectionapp.common.write
 import kotlinx.coroutines.flow.collectLatest
 import java.io.File
@@ -153,7 +155,7 @@ fun AddEditBookScreen(
             ) {
                 Icon(
                     imageVector = Icons.Default.Add,
-                    contentDescription = "Add book",
+                    contentDescription = "Save book",
                     tint = MaterialTheme.colors.onPrimary
                 )
             }
@@ -246,7 +248,9 @@ fun AddEditBookScreen(
                     placeholder = { Text("Title") },
                     singleLine = true,
                     isError = errorState.titleError != null,
-                    modifier = Modifier.fillMaxWidth()
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .testTag(TestTags.TITLE_TEXT_FIELD)
                 )
 
                 if (errorState.titleError != null) {
@@ -262,7 +266,9 @@ fun AddEditBookScreen(
                     placeholder = { Text("Author") },
                     singleLine = true,
                     isError = errorState.authorError != null,
-                    modifier = Modifier.fillMaxWidth()
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .testTag(TestTags.AUTHOR_TEXT_FIELD)
                 )
 
                 if (errorState.authorError != null) {
@@ -288,6 +294,7 @@ fun AddEditBookScreen(
                                     imageVector = iconGenre,
                                     contentDescription = "Genre",
                                     modifier = Modifier
+                                        .testTag(TestTags.GENRE_TEXT_FIELD)
                                         .clickable {
                                             viewModel.onEvent(
                                                 AddEditBookEvent.GenreDropdownMenuStateChanged(
@@ -357,6 +364,7 @@ fun AddEditBookScreen(
                                     imageVector = iconLanguage,
                                     contentDescription = "Language",
                                     modifier = Modifier
+                                        .testTag(TestTags.LANGUAGE_TEXT_FIELD)
                                         .clickable {
                                             viewModel.onEvent(
                                                 AddEditBookEvent.LanguageDropdownMenuStateChanged(
@@ -445,6 +453,7 @@ fun AddEditBookScreen(
                                     imageVector = iconReadingStatus,
                                     contentDescription = "Status",
                                     modifier = Modifier
+                                        .testTag(TestTags.READING_STATUS_TEXT_FIELD)
                                         .clickable {
                                             viewModel.onEvent(
                                                 AddEditBookEvent.ReadingStatusDropdownMenuStateChanged(
@@ -518,6 +527,7 @@ fun AddEditBookScreen(
                                     imageVector = iconRating,
                                     contentDescription = "Rating",
                                     modifier = Modifier
+                                        .testTag(TestTags.RATING_TEXT_FIELD)
                                         .clickable {
                                             viewModel.onEvent(
                                                 AddEditBookEvent.RatingDropdownMenuStateChanged(
@@ -590,7 +600,9 @@ fun AddEditBookScreen(
                     placeholder = { Text("Publisher") },
                     singleLine = true,
                     isError = errorState.publisherError != null,
-                    modifier = Modifier.fillMaxWidth()
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .testTag(TestTags.PUBLISHER_TEXT_FIELD)
                 )
 
                 if (errorState.publisherError != null) {

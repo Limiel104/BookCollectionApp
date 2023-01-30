@@ -93,47 +93,36 @@ class BookListScreenTest {
     fun filterSection_chooseFilter_listFiltered() {
         composeRule.onNodeWithTag(TestTags.FILTER_SECTION).assertIsDisplayed()
         composeRule.onNodeWithTag(Genre.Action.value).performClick()
-        composeRule.waitUntil(1000L) { true }
         composeRule.onNodeWithTag(Genre.Adventure.value).performClick()
-        composeRule.waitUntil(1000L) { true }
+
         composeRule.onNodeWithTag(TestTags.FILTER_SECTION).performScrollToNode(hasTestTag(Genre.Comedy.value))
-        composeRule.waitUntil(1000L) { true }
         composeRule.onNodeWithTag(Genre.Comedy.value).performClick()
-        composeRule.waitUntil(1000L) { true }
+
         composeRule.onNodeWithTag(TestTags.FILTER_SECTION).performScrollToNode(hasTestTag(Genre.Fantasy.value))
-        composeRule.waitUntil(1000L) { true }
         composeRule.onNodeWithTag(Genre.Fantasy.value).performClick()
-        composeRule.waitUntil(1000L) { true }
+
         composeRule.onNodeWithTag(TestTags.FILTER_SECTION).performScrollToNode(hasTestTag(Genre.Historical.value))
-        composeRule.waitUntil(1000L) { true }
         composeRule.onNodeWithTag(Genre.Historical.value).performClick()
-        composeRule.waitUntil(1000L) { true }
+
         composeRule.onNodeWithTag(TestTags.FILTER_SECTION).performScrollToNode(hasTestTag(Genre.Horror.value))
-        composeRule.waitUntil(1000L) { true }
         composeRule.onNodeWithTag(Genre.Horror.value).performClick()
-        composeRule.waitUntil(1000L) { true }
+
         composeRule.onNodeWithTag(TestTags.FILTER_SECTION).performScrollToNode(hasTestTag(Genre.Nonfiction.value))
-        composeRule.waitUntil(1000L) { true }
         composeRule.onNodeWithTag(Genre.Nonfiction.value).performClick()
-        composeRule.waitUntil(1000L) { true }
+
         composeRule.onNodeWithTag(TestTags.FILTER_SECTION).performScrollToNode(hasTestTag(Genre.Mystery.value))
-        composeRule.waitUntil(1000L) { true }
         composeRule.onNodeWithTag(Genre.Mystery.value).performClick()
-        composeRule.waitUntil(1000L) { true }
+
         composeRule.onNodeWithTag(TestTags.FILTER_SECTION).performScrollToNode(hasTestTag(Genre.Romance.value))
-        composeRule.waitUntil(1000L) { true }
         composeRule.onNodeWithTag(Genre.Romance.value).performClick()
-        composeRule.waitUntil(1000L) { true }
+
         composeRule.onNodeWithTag(TestTags.FILTER_SECTION).performScrollToNode(hasTestTag(Genre.Science.value))
-        composeRule.waitUntil(1000L) { true }
         composeRule.onNodeWithTag(Genre.Science.value).performClick()
-        composeRule.waitUntil(1000L) { true }
+
         composeRule.onNodeWithTag(TestTags.FILTER_SECTION).performScrollToNode(hasTestTag(Genre.Thriller.value))
-        composeRule.waitUntil(1000L) { true }
         composeRule.onNodeWithTag(Genre.Thriller.value).performClick()
-        composeRule.waitUntil(1000L) { true }
+
         composeRule.onNodeWithTag(TestTags.FILTER_SECTION).performScrollToNode(hasTestTag(Genre.All.value))
-        composeRule.waitUntil(1000L) { true }
         composeRule.onNodeWithTag(Genre.All.value).performClick()
     }
 }

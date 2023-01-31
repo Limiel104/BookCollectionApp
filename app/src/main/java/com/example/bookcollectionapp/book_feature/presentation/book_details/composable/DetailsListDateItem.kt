@@ -10,9 +10,11 @@ import androidx.compose.material.icons.filled.DateRange
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.example.bookcollectionapp.common.TestTags
 import com.example.bookcollectionapp.ui.theme.Red
 
 @Composable
@@ -45,7 +47,9 @@ fun DetailsListDateItem(
 
             Text(
                 text = date,
-                modifier = Modifier.padding(start = 5.dp)
+                modifier = Modifier
+                    .padding(start = 5.dp)
+                    .testTag(TestTags.BOOK_DETAILS_DATE)
             )
         }
     }

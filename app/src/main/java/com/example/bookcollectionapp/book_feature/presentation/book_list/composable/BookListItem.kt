@@ -15,6 +15,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
@@ -24,6 +25,7 @@ import coil.compose.AsyncImage
 import coil.request.ImageRequest
 import com.example.bookcollectionapp.R
 import com.example.bookcollectionapp.book_feature.domain.model.Book
+import com.example.bookcollectionapp.common.TestTags
 import com.example.bookcollectionapp.ui.theme.Red
 import com.example.bookcollectionapp.ui.theme.Yellow
 import java.text.SimpleDateFormat
@@ -36,6 +38,7 @@ fun BookListItem(
 ) {
     Row(
         modifier = modifier
+            .testTag(TestTags.BOOK_ITEM)
             .padding(start = 5.dp)
             .padding(vertical = 7.dp)
             .background(MaterialTheme.colors.background),

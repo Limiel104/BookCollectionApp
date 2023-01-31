@@ -10,9 +10,11 @@ import androidx.compose.material.icons.filled.Star
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.example.bookcollectionapp.common.TestTags
 import com.example.bookcollectionapp.ui.theme.Yellow
 
 @Composable
@@ -42,7 +44,8 @@ fun DetailsListRatingItem(
                 Icon(
                     imageVector = Icons.Default.Star,
                     contentDescription = "Rating",
-                    tint = Yellow
+                    tint = Yellow,
+                    modifier = Modifier.testTag(TestTags.BOOK_DETAILS_RATING)
                 )
             }
         }

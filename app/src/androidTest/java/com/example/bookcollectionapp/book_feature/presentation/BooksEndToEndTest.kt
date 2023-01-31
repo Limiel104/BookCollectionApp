@@ -113,4 +113,183 @@ class BooksEndToEndTest {
         composeRule.onNodeWithContentDescription("Save book").performClick()
         composeRule.onNodeWithText("Book title").assertIsDisplayed()
     }
+
+    @Test
+    fun bookList_checkIfBooksAreSortedInDefaultOrder_orderIsCorrect() {
+        for(i in 1..3) {
+            composeRule.onNodeWithContentDescription("Add book").performClick()
+            composeRule.onNodeWithTag(TestTags.TITLE_TEXT_FIELD).performTextInput("Book title $i")
+            composeRule.onNodeWithTag(TestTags.AUTHOR_TEXT_FIELD).performTextInput("Book author")
+            composeRule.onNodeWithTag(TestTags.GENRE_TEXT_FIELD).performClick()
+            composeRule.onNodeWithText(Genre.Adventure.value).performClick()
+            composeRule.onNodeWithTag(TestTags.LANGUAGE_TEXT_FIELD).performClick()
+            composeRule.onNodeWithText(Language.English.value).performClick()
+            composeRule.onNodeWithTag(TestTags.READING_STATUS_TEXT_FIELD).performClick()
+            composeRule.onNodeWithText(ReadingStatus.Reading.value).performClick()
+            composeRule.onNodeWithTag(TestTags.RATING_TEXT_FIELD).performClick()
+            composeRule.onNodeWithText(Rating.Five.value).performClick()
+            composeRule.onNodeWithTag(TestTags.PUBLISHER_TEXT_FIELD).performTextInput("Book publisher")
+            composeRule.onNodeWithContentDescription("Save book").performClick()
+        }
+
+        composeRule.onNodeWithText("Book title 1").assertIsDisplayed()
+        composeRule.onNodeWithText("Book title 2").assertIsDisplayed()
+        composeRule.onNodeWithText("Book title 3").assertIsDisplayed()
+
+        composeRule.onAllNodesWithTag(TestTags.BOOK_ITEM)[0].assertTextContains("Book title 1")
+        composeRule.onAllNodesWithTag(TestTags.BOOK_ITEM)[1].assertTextContains("Book title 2")
+        composeRule.onAllNodesWithTag(TestTags.BOOK_ITEM)[2].assertTextContains("Book title 3")
+    }
+
+    @Test
+    fun bookList_setOrderToTitleDescending_orderIsCorrect() {
+        for(i in 1..3) {
+            composeRule.onNodeWithContentDescription("Add book").performClick()
+            composeRule.onNodeWithTag(TestTags.TITLE_TEXT_FIELD).performTextInput("Book title $i")
+            composeRule.onNodeWithTag(TestTags.AUTHOR_TEXT_FIELD).performTextInput("Book author")
+            composeRule.onNodeWithTag(TestTags.GENRE_TEXT_FIELD).performClick()
+            composeRule.onNodeWithText(Genre.Adventure.value).performClick()
+            composeRule.onNodeWithTag(TestTags.LANGUAGE_TEXT_FIELD).performClick()
+            composeRule.onNodeWithText(Language.English.value).performClick()
+            composeRule.onNodeWithTag(TestTags.READING_STATUS_TEXT_FIELD).performClick()
+            composeRule.onNodeWithText(ReadingStatus.Reading.value).performClick()
+            composeRule.onNodeWithTag(TestTags.RATING_TEXT_FIELD).performClick()
+            composeRule.onNodeWithText(Rating.Five.value).performClick()
+            composeRule.onNodeWithTag(TestTags.PUBLISHER_TEXT_FIELD).performTextInput("Book publisher")
+            composeRule.onNodeWithContentDescription("Save book").performClick()
+        }
+
+        composeRule.onNodeWithText("Book title 1").assertIsDisplayed()
+        composeRule.onNodeWithText("Book title 2").assertIsDisplayed()
+        composeRule.onNodeWithText("Book title 3").assertIsDisplayed()
+
+        composeRule.onNodeWithContentDescription("Sort").performClick()
+        composeRule.onNodeWithTag(TestTags.ORDER_TYPE_TITLE_DESC).performClick()
+        composeRule.onNodeWithContentDescription("Sort").performClick()
+
+        composeRule.onAllNodesWithTag(TestTags.BOOK_ITEM)[0].assertTextContains("Book title 3")
+        composeRule.onAllNodesWithTag(TestTags.BOOK_ITEM)[1].assertTextContains("Book title 2")
+        composeRule.onAllNodesWithTag(TestTags.BOOK_ITEM)[2].assertTextContains("Book title 1")
+    }
+
+    @Test
+    fun bookList_setOrderToDateAscending_orderIsCorrect() {
+        for(i in listOf("One","Two","Three")) {
+            composeRule.onNodeWithContentDescription("Add book").performClick()
+            composeRule.onNodeWithTag(TestTags.TITLE_TEXT_FIELD).performTextInput("Book title $i")
+            composeRule.onNodeWithTag(TestTags.AUTHOR_TEXT_FIELD).performTextInput("Book author")
+            composeRule.onNodeWithTag(TestTags.GENRE_TEXT_FIELD).performClick()
+            composeRule.onNodeWithText(Genre.Adventure.value).performClick()
+            composeRule.onNodeWithTag(TestTags.LANGUAGE_TEXT_FIELD).performClick()
+            composeRule.onNodeWithText(Language.English.value).performClick()
+            composeRule.onNodeWithTag(TestTags.READING_STATUS_TEXT_FIELD).performClick()
+            composeRule.onNodeWithText(ReadingStatus.Reading.value).performClick()
+            composeRule.onNodeWithTag(TestTags.RATING_TEXT_FIELD).performClick()
+            composeRule.onNodeWithText(Rating.Five.value).performClick()
+            composeRule.onNodeWithTag(TestTags.PUBLISHER_TEXT_FIELD).performTextInput("Book publisher")
+            composeRule.onNodeWithContentDescription("Save book").performClick()
+        }
+
+        composeRule.onNodeWithText("Book title One").assertIsDisplayed()
+        composeRule.onNodeWithText("Book title Three").assertIsDisplayed()
+        composeRule.onNodeWithText("Book title Two").assertIsDisplayed()
+
+        composeRule.onNodeWithContentDescription("Sort").performClick()
+        composeRule.onNodeWithTag(TestTags.ORDER_TYPE_DATE_ASC).performClick()
+        composeRule.onNodeWithContentDescription("Sort").performClick()
+
+        composeRule.onAllNodesWithTag(TestTags.BOOK_ITEM)[0].assertTextContains("Book title One")
+        composeRule.onAllNodesWithTag(TestTags.BOOK_ITEM)[1].assertTextContains("Book title Two")
+        composeRule.onAllNodesWithTag(TestTags.BOOK_ITEM)[2].assertTextContains("Book title Three")
+    }
+
+    @Test
+    fun bookList_setOrderToDateDescending_orderIsCorrect() {
+        for(i in listOf("One","Two","Three")) {
+            composeRule.onNodeWithContentDescription("Add book").performClick()
+            composeRule.onNodeWithTag(TestTags.TITLE_TEXT_FIELD).performTextInput("Book title $i")
+            composeRule.onNodeWithTag(TestTags.AUTHOR_TEXT_FIELD).performTextInput("Book author")
+            composeRule.onNodeWithTag(TestTags.GENRE_TEXT_FIELD).performClick()
+            composeRule.onNodeWithText(Genre.Adventure.value).performClick()
+            composeRule.onNodeWithTag(TestTags.LANGUAGE_TEXT_FIELD).performClick()
+            composeRule.onNodeWithText(Language.English.value).performClick()
+            composeRule.onNodeWithTag(TestTags.READING_STATUS_TEXT_FIELD).performClick()
+            composeRule.onNodeWithText(ReadingStatus.Reading.value).performClick()
+            composeRule.onNodeWithTag(TestTags.RATING_TEXT_FIELD).performClick()
+            composeRule.onNodeWithText(Rating.Five.value).performClick()
+            composeRule.onNodeWithTag(TestTags.PUBLISHER_TEXT_FIELD).performTextInput("Book publisher")
+            composeRule.onNodeWithContentDescription("Save book").performClick()
+        }
+
+        composeRule.onNodeWithText("Book title One").assertIsDisplayed()
+        composeRule.onNodeWithText("Book title Three").assertIsDisplayed()
+        composeRule.onNodeWithText("Book title Two").assertIsDisplayed()
+
+        composeRule.onNodeWithContentDescription("Sort").performClick()
+        composeRule.onNodeWithTag(TestTags.ORDER_TYPE_DATE_DESC).performClick()
+        composeRule.onNodeWithContentDescription("Sort").performClick()
+
+        composeRule.onAllNodesWithTag(TestTags.BOOK_ITEM)[0].assertTextContains("Book title Three")
+        composeRule.onAllNodesWithTag(TestTags.BOOK_ITEM)[1].assertTextContains("Book title Two")
+        composeRule.onAllNodesWithTag(TestTags.BOOK_ITEM)[2].assertTextContains("Book title One")
+    }
+
+    @Test
+    fun bookListItem_clickBookOnTheList_navigateToDetailsScreen() {
+        composeRule.onNodeWithContentDescription("Add book").performClick()
+        composeRule.onNodeWithTag(TestTags.TITLE_TEXT_FIELD).performTextInput("Book title")
+        composeRule.onNodeWithTag(TestTags.AUTHOR_TEXT_FIELD).performTextInput("Book author")
+        composeRule.onNodeWithTag(TestTags.GENRE_TEXT_FIELD).performClick()
+        composeRule.onNodeWithText(Genre.Adventure.value).performClick()
+        composeRule.onNodeWithTag(TestTags.LANGUAGE_TEXT_FIELD).performClick()
+        composeRule.onNodeWithText(Language.English.value).performClick()
+        composeRule.onNodeWithTag(TestTags.READING_STATUS_TEXT_FIELD).performClick()
+        composeRule.onNodeWithText(ReadingStatus.Reading.value).performClick()
+        composeRule.onNodeWithTag(TestTags.RATING_TEXT_FIELD).performClick()
+        composeRule.onNodeWithText(Rating.Five.value).performClick()
+        composeRule.onNodeWithTag(TestTags.PUBLISHER_TEXT_FIELD).performTextInput("Book publisher")
+        composeRule.onNodeWithContentDescription("Save book").performClick()
+
+        composeRule.onNodeWithTag(TestTags.BOOK_ITEM).performClick()
+        composeRule.onNodeWithContentDescription("Edit book").assertExists()
+    }
+
+    @Test
+    fun book_clickBokOnTheList_bookDetailAreCorrect() {
+        composeRule.onNodeWithContentDescription("Add book").performClick()
+        composeRule.onNodeWithTag(TestTags.TITLE_TEXT_FIELD).performTextInput("Book title")
+        composeRule.onNodeWithTag(TestTags.AUTHOR_TEXT_FIELD).performTextInput("Book author")
+        composeRule.onNodeWithTag(TestTags.GENRE_TEXT_FIELD).performClick()
+        composeRule.onNodeWithText(Genre.Adventure.value).performClick()
+        composeRule.onNodeWithTag(TestTags.LANGUAGE_TEXT_FIELD).performClick()
+        composeRule.onNodeWithText(Language.English.value).performClick()
+        composeRule.onNodeWithTag(TestTags.READING_STATUS_TEXT_FIELD).performClick()
+        composeRule.onNodeWithText(ReadingStatus.Reading.value).performClick()
+        composeRule.onNodeWithTag(TestTags.RATING_TEXT_FIELD).performClick()
+        composeRule.onNodeWithText(Rating.Five.value).performClick()
+        composeRule.onNodeWithTag(TestTags.PUBLISHER_TEXT_FIELD).performTextInput("Book publisher")
+        composeRule.onNodeWithContentDescription("Save book").performClick()
+
+        composeRule.onNodeWithTag(TestTags.BOOK_ITEM).performClick()
+
+        composeRule.onNodeWithTag(TestTags.BOOK_DETAILS_TITLE).assertIsDisplayed()
+        composeRule.onNodeWithTag(TestTags.BOOK_DETAILS_TITLE).assertTextContains("Book title")
+
+        composeRule.onNodeWithTag(TestTags.BOOK_DETAILS_AUTHOR).assertIsDisplayed()
+        composeRule.onNodeWithTag(TestTags.BOOK_DETAILS_AUTHOR).assertTextContains("Book author")
+
+        composeRule.onAllNodesWithTag(TestTags.BOOK_DETAILS_RATING).assertCountEquals(5)
+
+        composeRule.onNodeWithContentDescription("Status").assertIsDisplayed()
+        composeRule.onNodeWithContentDescription("Status").assertTextContains("Reading")
+
+        composeRule.onNodeWithContentDescription("Publisher").assertIsDisplayed()
+        composeRule.onNodeWithContentDescription("Publisher").assertTextContains("Book publisher")
+
+        composeRule.onNodeWithContentDescription("Genre").assertIsDisplayed()
+        composeRule.onNodeWithContentDescription("Genre").assertTextContains("Adventure")
+
+        composeRule.onNodeWithContentDescription("Language").assertIsDisplayed()
+        composeRule.onNodeWithContentDescription("Language").assertTextContains("English")
+    }
 }
